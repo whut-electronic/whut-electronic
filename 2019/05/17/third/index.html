@@ -1,0 +1,1131 @@
+<!DOCTYPE html>
+<html  lang="zh">
+<head>
+    <meta charset="utf-8" />
+
+<meta name="generator" content="Hexo 3.8.0" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+
+<title>寝室微型网络服务器的配置（Ubuntu+LAMP) - 武汉理工大学电子科技协会</title>
+
+
+    <meta name="description" content="第一步 安装UbuntuUbuntu下载地址：https://www.ubuntu.com/download/desktop 使用软碟通工具将光盘镜像文件写入到U盘，服务器从U盘启动安装Ubuntu系统。建议安装时断网，防止安装过程中下载更新。整个过程大概需要40分钟。 第二步 配置SSH">
+<meta name="keywords" content="linux运维">
+<meta property="og:type" content="article">
+<meta property="og:title" content="寝室微型网络服务器的配置（Ubuntu+LAMP)">
+<meta property="og:url" content="https://whut-electronic.github.io/2019/05/17/third/index.html">
+<meta property="og:site_name" content="武汉理工大学电子科技协会">
+<meta property="og:description" content="第一步 安装UbuntuUbuntu下载地址：https://www.ubuntu.com/download/desktop 使用软碟通工具将光盘镜像文件写入到U盘，服务器从U盘启动安装Ubuntu系统。建议安装时断网，防止安装过程中下载更新。整个过程大概需要40分钟。 第二步 配置SSH">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://whut-electronic.github.io/images/og_image.png">
+<meta property="og:updated_time" content="2019-06-27T02:12:12.886Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="寝室微型网络服务器的配置（Ubuntu+LAMP)">
+<meta name="twitter:description" content="第一步 安装UbuntuUbuntu下载地址：https://www.ubuntu.com/download/desktop 使用软碟通工具将光盘镜像文件写入到U盘，服务器从U盘启动安装Ubuntu系统。建议安装时断网，防止安装过程中下载更新。整个过程大概需要40分钟。 第二步 配置SSH">
+<meta name="twitter:image" content="https://whut-electronic.github.io/images/og_image.png">
+
+
+
+
+
+
+
+<link rel="icon" href="/images/favicon.ico">
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.7.2/css/bulma.css">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu:400,600|Source+Code+Pro">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-dark.css">
+
+
+    
+    
+    
+    <style>body>.footer,body>.navbar,body>.section{opacity:0}</style>
+    
+
+    
+    
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/css/lightgallery.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/css/justifiedGallery.min.css">
+    
+
+    
+    
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.css">
+
+
+    
+    
+    
+    
+
+<link rel="stylesheet" href="/css/back-to-top.css">
+
+
+    
+    
+
+    
+    
+    
+    
+
+    
+    
+<link rel="stylesheet" href="/css/progressbar.css">
+<script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script>
+
+    
+    
+    
+
+
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<body class="is-3-column">
+    <nav class="navbar navbar-main">
+    <div class="container">
+        <div class="navbar-brand is-flex-center">
+            <a class="navbar-item navbar-logo" href="/">
+            
+                <img src="/images/logo.svg" alt="寝室微型网络服务器的配置（Ubuntu+LAMP)" height="28">
+            
+            </a>
+        </div>
+        <div class="navbar-menu">
+            
+            <div class="navbar-start">
+                
+                <a class="navbar-item"
+                href="/">主页</a>
+                
+                <a class="navbar-item"
+                href="/archives">归档</a>
+                
+                <a class="navbar-item"
+                href="/categories">分类</a>
+                
+                <a class="navbar-item"
+                href="/tags">标签</a>
+                
+                <a class="navbar-item"
+                href="/about">关于</a>
+                
+            </div>
+            
+            <div class="navbar-end">
+                
+                    
+                    
+                    <a class="navbar-item" target="_blank" title="Download on GitHub" href="https://github.com/ppoffice/hexo-theme-icarus">
+                        
+                        <i class="fab fa-github"></i>
+                        
+                    </a>
+                    
+                
+                
+                
+                <a class="navbar-item search" title="搜索" href="javascript:;">
+                    <i class="fas fa-search"></i>
+                </a>
+                
+            </div>
+        </div>
+    </div>
+</nav>
+    
+    <section class="section">
+        <div class="container">
+            <div class="columns">
+                <div class="column is-8-tablet is-8-desktop is-6-widescreen has-order-2 column-main"><div class="card">
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2019-05-17T02:11:40.000Z">2019-05-17</time>
+                
+                
+                <span class="level-item has-text-grey">
+                    
+                    
+                    15 分钟 读完 (大约 2265 个字)
+                </span>
+                
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                寝室微型网络服务器的配置（Ubuntu+LAMP)
+            
+        </h1>
+        <div class="content">
+            <h2 id="第一步-安装Ubuntu"><a href="#第一步-安装Ubuntu" class="headerlink" title="第一步 安装Ubuntu"></a>第一步 安装Ubuntu</h2><p>Ubuntu下载地址：<a href="https://www.ubuntu.com/download/desktop" target="_blank" rel="noopener">https://www.ubuntu.com/download/desktop</a></p>
+<p>使用软碟通工具将光盘镜像文件写入到U盘，服务器从U盘启动安装Ubuntu系统。建议安装时断网，防止安装过程中下载更新。整个过程大概需要40分钟。</p>
+<h2 id="第二步-配置SSH"><a href="#第二步-配置SSH" class="headerlink" title="第二步 配置SSH"></a>第二步 配置SSH</h2><a id="more"></a>
+<h3 id="安装SSH"><a href="#安装SSH" class="headerlink" title="安装SSH"></a>安装SSH</h3><figure class="highlight bash hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment"># 更新软件源</span></span><br><span class="line">$ sudo apt-get update</span><br><span class="line"><span class="hljs-comment"># 安装ssh</span></span><br><span class="line">$ sudo apt-get install openssh-server openssh-client</span><br></pre></td></tr></table></figure>
+<h3 id="配置SSH"><a href="#配置SSH" class="headerlink" title="配置SSH"></a>配置SSH</h3><figure class="highlight bash hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment"># 打开ssh配置文件</span></span><br><span class="line">$ sudo vim /etc/ssh/sshd_config</span><br></pre></td></tr></table></figure>
+<p>修改以下配置项<br><figure class="highlight hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment"># 允许root账号登录</span></span><br><span class="line">PermitRootLogin yes</span><br><span class="line"><span class="hljs-comment"># 自定义SSH端口号</span></span><br><span class="line">Port 2222</span><br><span class="line"><span class="hljs-comment"># 允许密码登录</span></span><br><span class="line">PasswordAuthentication yes</span><br></pre></td></tr></table></figure></p>
+<p>保存文件，输入以下命令<br><figure class="highlight bash hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment"># 设置开机自动启动ssh服务</span></span><br><span class="line">$ sudo update-rc.d ssh defaults</span><br><span class="line"><span class="hljs-comment"># 启动ssh服务</span></span><br><span class="line">$ sudo service ssh start</span><br></pre></td></tr></table></figure></p>
+<p>修改root账号的密码<br><figure class="highlight bash hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment"># 更改root账户默认密码</span></span><br><span class="line">$ sudo passwd</span><br><span class="line">&gt; 输入新的UNIX密码：</span><br><span class="line">&gt; 重新输入新的UNIX密码：</span><br><span class="line">&gt; passwd：已成功更新密码</span><br></pre></td></tr></table></figure></p>
+<p>查看本机IP<br><figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$ ifconfig -a</span><br><span class="line">&gt; enp1s0: flags=4163&lt;UP,BROADCAST,RUNNING,MULTICAST&gt;  mtu 1500</span><br><span class="line">        inet 192.168.1.101  netmask 255.255.255.0  broadcast 192.168.1.255</span><br><span class="line">        ...</span><br><span class="line">        ...</span><br></pre></td></tr></table></figure></p>
+<p>此时即可通过局域网内另一台电脑SSH登录到此服务器上（推荐使用XShell工具），本博文剩余部分全部使用root账户SSH登录到服务器上进行操作。</p>
+<h2 id="第三步-内网穿透或DDNS"><a href="#第三步-内网穿透或DDNS" class="headerlink" title="第三步 内网穿透或DDNS"></a>第三步 内网穿透或DDNS</h2><p>如果你的寝室网络为内网IP，那么你需要使用内网穿透工具，将服务器穿透到公网。如果你的寝室网络为公网IP，但这个IP会变化，那么你需要使用动态域名解析（DDNS）。</p>
+<blockquote>
+<p>如何判断我的IP是内网IP还是公网IP？</p>
+</blockquote>
+<p>百度搜索”IP”，你就会看到自己的外网IP地址。然后Ping这个地址，若有相应，那么恭喜你，你的IP是公网IP；若Ping无响应，那么你的IP是内网IP</p>
+<h3 id="内网IP：使用FRP工具进行内网穿透"><a href="#内网IP：使用FRP工具进行内网穿透" class="headerlink" title="内网IP：使用FRP工具进行内网穿透"></a>内网IP：使用FRP工具进行内网穿透</h3><p>FRP是一个免费的内网穿透软件。使用FRP进行内网穿透，你需要拥有一台可以连接到公网的服务器</p>
+<h4 id="服务器端配置"><a href="#服务器端配置" class="headerlink" title="服务器端配置"></a>服务器端配置</h4><p>我的公网服务器是固定IP，系统是WindowsServer。访问 <a href="http://diannaobos.iok.la:81/frp/frp-v0.20.0/" target="_blank" rel="noopener">http://diannaobos.iok.la:81/frp/frp-v0.20.0/</a> 下载frp_0.20.0_windows_amd64.zip ，解压，在cmd中运行frps.exe</p>
+<p>Linux系统服务端的配置与Windows系统类似，具体可参考客服端配置</p>
+<h4 id="客户端配置"><a href="#客户端配置" class="headerlink" title="客户端配置"></a>客户端配置</h4><p>使用wet命令下载frp:<br><figure class="highlight bash hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment"># 创建一个文件夹用来放frp</span></span><br><span class="line">$ mkdir /home/frp</span><br><span class="line">$ <span class="hljs-built_in">cd</span> /home/frp</span><br><span class="line"><span class="hljs-comment"># 下载frp</span></span><br><span class="line">$ wget http://diannaobos.iok.la:81/frp/frp-v0.20.0/frp_0.20.0_linux_amd64.tar.gz</span><br><span class="line"><span class="hljs-comment"># 解压</span></span><br><span class="line">$ tar -xzf frp_0.20.0_linux_amd64.tar.gz</span><br><span class="line"><span class="hljs-comment"># 进入解压后的文件夹</span></span><br><span class="line">$ <span class="hljs-built_in">cd</span> frp_0.20.0_linux_amd64</span><br><span class="line"><span class="hljs-comment"># 编辑配置文件</span></span><br><span class="line">$ vim frpc.ini</span><br></pre></td></tr></table></figure></p>
+<p>配置文件样例：<br><figure class="highlight ini hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-section">[common]</span></span><br><span class="line"><span class="hljs-comment"># 公网服务端的地址或IP</span></span><br><span class="line"><span class="hljs-attr">server_addr</span> = xxx.xxx.xxx.xxx</span><br><span class="line"><span class="hljs-comment"># frp服务器端口，默认7000，与服务端一致</span></span><br><span class="line"><span class="hljs-attr">server_port</span> = <span class="hljs-number">7000</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-comment"># 添加一个名为ssh的端口映射</span></span><br><span class="line"><span class="hljs-section">[ssh]</span></span><br><span class="line"><span class="hljs-attr">type</span> = tcp</span><br><span class="line"><span class="hljs-attr">local_ip</span> = <span class="hljs-number">127.0</span>.<span class="hljs-number">0.1</span></span><br><span class="line"><span class="hljs-comment"># 本地端口2222，将来配置SSH时使用的端口应和这个一致</span></span><br><span class="line"><span class="hljs-attr">local_port</span> = <span class="hljs-number">2222</span></span><br><span class="line"><span class="hljs-comment"># 映射到公网服务器的端口</span></span><br><span class="line"><span class="hljs-attr">remote_port</span> = <span class="hljs-number">2222</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-section">[web]</span></span><br><span class="line"><span class="hljs-attr">type</span> = tcp</span><br><span class="line"><span class="hljs-attr">local_ip</span> = <span class="hljs-number">127.0</span>.<span class="hljs-number">0.1</span></span><br><span class="line"><span class="hljs-comment"># 本地web服务器80端口</span></span><br><span class="line"><span class="hljs-attr">local_port</span> = <span class="hljs-number">80</span>、、</span><br><span class="line"><span class="hljs-comment"># 映射到公网服务器的8080端口</span></span><br><span class="line"><span class="hljs-attr">remote_port</span> = <span class="hljs-number">8080</span></span><br></pre></td></tr></table></figure></p>
+<p>保存文件并退出vim编辑器，使用以下命令测试运行frpc:<br><figure class="highlight bash hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ frpc -c frpc.ini</span><br></pre></td></tr></table></figure></p>
+<p>若无错误，即可关闭当前终端，重新启动一个新的终端，输入以下命令后台运行frpc:<br><figure class="highlight bash hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="hljs-built_in">cd</span> /home/frp/frp_0.20.0_linux_amd64</span><br><span class="line">$ nohup ./frpc -c ./frpc.ini &gt; /dev/null 2&gt;&amp;1 &amp;</span><br></pre></td></tr></table></figure></p>
+<p>至此，内网穿透配置完毕。你可以使用 ‘公网IP或公网地址:2222’ 来SSH登录到你的服务器，或使用 <a href="http://公网IP或公网地址:8080" target="_blank" rel="noopener">http://公网IP或公网地址:8080</a> 来访问你的服务器上的网页资源。</p>
+<h3 id="公网IP：利用GoDaddy-API实现DDNS"><a href="#公网IP：利用GoDaddy-API实现DDNS" class="headerlink" title="公网IP：利用GoDaddy API实现DDNS"></a>公网IP：利用GoDaddy API实现DDNS</h3><p>GoDaddy是全球最大的域名注册商，它提供了一些API，可以实现动态域名解析</p>
+<h4 id="在GoDaddy注册账号并购买一个域名"><a href="#在GoDaddy注册账号并购买一个域名" class="headerlink" title="在GoDaddy注册账号并购买一个域名"></a>在GoDaddy注册账号并购买一个域名</h4><p>首先在GoDaddy购买一个域名，很多域名都是有优惠的，10-30元就可以注册一个域名一年的使用权。如果你已经在GoDaddy拥有域名，那么可以跳过这一步。</p>
+<h4 id="注册GoDaddyAPI"><a href="#注册GoDaddyAPI" class="headerlink" title="注册GoDaddyAPI"></a>注册GoDaddyAPI</h4><p>打开GoDaddy API网站：<a href="https://developer.godaddy.com/" target="_blank" rel="noopener">https://developer.godaddy.com/</a> ，点击“API Keys”，登录自己的账号，点击“Create New API Key”，复制生成的密钥并妥善保存。</p>
+<h4 id="编写Python脚本"><a href="#编写Python脚本" class="headerlink" title="编写Python脚本"></a>编写Python脚本</h4><figure class="highlight python hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">import</span> urllib.request</span><br><span class="line"><span class="hljs-keyword">import</span> http.client</span><br><span class="line"><span class="hljs-keyword">import</span> json</span><br><span class="line"><span class="hljs-keyword">import</span> time</span><br><span class="line"></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">log</span><span class="hljs-params">(info)</span>:</span></span><br><span class="line">    print(time.strftime(<span class="hljs-string">"[%Y-%m-%d %H:%M:%S]"</span>, time.localtime())+info)</span><br><span class="line"></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">update_NS</span><span class="hljs-params">(domain, ip_addr)</span>:</span></span><br><span class="line">    api_url = <span class="hljs-string">'https://api.godaddy.com/v1/domains/'</span> + domain + <span class="hljs-string">'/records'</span></span><br><span class="line">    <span class="hljs-comment"># 此处替换为你的secretID</span></span><br><span class="line">    secret_id = <span class="hljs-string">'*************************'</span></span><br><span class="line">    <span class="hljs-comment"># 此处替换为你的secretKey</span></span><br><span class="line">    secret_key = <span class="hljs-string">'************************'</span></span><br><span class="line">    head = &#123;&#125;</span><br><span class="line">    head[<span class="hljs-string">'Accept'</span>] = <span class="hljs-string">'application/json'</span></span><br><span class="line">    head[<span class="hljs-string">'Content-Type'</span>] = <span class="hljs-string">'application/json'</span></span><br><span class="line">    head[<span class="hljs-string">'Authorization'</span>] = <span class="hljs-string">'sso-key '</span> + secret_id + <span class="hljs-string">':'</span> + secret_key</span><br><span class="line">    records_a = &#123;</span><br><span class="line">        <span class="hljs-string">"data"</span>: ip_addr,</span><br><span class="line">        <span class="hljs-string">"name"</span>: <span class="hljs-string">"@"</span>,</span><br><span class="line">        <span class="hljs-string">"ttl"</span>: <span class="hljs-number">600</span>,</span><br><span class="line">        <span class="hljs-string">"type"</span>: <span class="hljs-string">'A'</span>,</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="hljs-comment">#必须包含的Record</span></span><br><span class="line">    records_NS01 = &#123;</span><br><span class="line">        <span class="hljs-string">"data"</span>: <span class="hljs-string">"ns07.domaincontrol.com"</span>,</span><br><span class="line">        <span class="hljs-string">"name"</span>: <span class="hljs-string">"@"</span>,</span><br><span class="line">        <span class="hljs-string">"ttl"</span>: <span class="hljs-number">3600</span>,</span><br><span class="line">        <span class="hljs-string">"type"</span>: <span class="hljs-string">"NS"</span>,</span><br><span class="line">    &#125;</span><br><span class="line">    records_NS02 = &#123;</span><br><span class="line">        <span class="hljs-string">"data"</span>: <span class="hljs-string">"ns08.domaincontrol.com"</span>,</span><br><span class="line">        <span class="hljs-string">"name"</span>: <span class="hljs-string">"@"</span>,</span><br><span class="line">        <span class="hljs-string">"ttl"</span>: <span class="hljs-number">3600</span>,</span><br><span class="line">        <span class="hljs-string">"type"</span>: <span class="hljs-string">"NS"</span>,</span><br><span class="line">    &#125;</span><br><span class="line">    put_data = [records_a, records_NS01, records_NS02]</span><br><span class="line">    <span class="hljs-keyword">try</span>:</span><br><span class="line">        req = urllib.request.Request(api_url,</span><br><span class="line">                                     headers=head,</span><br><span class="line">                                     data=json.dumps(put_data).encode(),</span><br><span class="line">                                     method=<span class="hljs-string">"PUT"</span>)</span><br><span class="line">        rsp = urllib.request.urlopen(req)</span><br><span class="line">        code = rsp.getcode()</span><br><span class="line">        <span class="hljs-keyword">if</span> code == <span class="hljs-number">200</span>:</span><br><span class="line">            log(<span class="hljs-string">'域名解析更新成功:'</span> + domain + <span class="hljs-string">' -&gt; '</span> + ip_addr)</span><br><span class="line">        <span class="hljs-keyword">else</span>:</span><br><span class="line">            log(<span class="hljs-string">'域名解析更新失败.'</span>)</span><br><span class="line">    <span class="hljs-keyword">except</span>:</span><br><span class="line">        log(<span class="hljs-string">'update_NS中发生了错误.'</span>)</span><br><span class="line">        log(<span class="hljs-string">'域名解析更新失败.'</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">get_IP</span><span class="hljs-params">()</span>:</span></span><br><span class="line">    <span class="hljs-keyword">try</span>:</span><br><span class="line">        url_ip = <span class="hljs-string">'http://2019.ip138.com/ic.asp'</span></span><br><span class="line">        req = urllib.request.Request(url_ip, method=<span class="hljs-string">"GET"</span>)</span><br><span class="line">        rsp = urllib.request.urlopen(req)</span><br><span class="line">        data = rsp.read()</span><br><span class="line">        data_str = str(data)</span><br><span class="line">        left = data_str.index(<span class="hljs-string">'['</span>) + <span class="hljs-number">1</span></span><br><span class="line">        right = data_str.index(<span class="hljs-string">']'</span>)</span><br><span class="line">        ip = data_str[left:right]</span><br><span class="line">        <span class="hljs-keyword">return</span> ip</span><br><span class="line">    <span class="hljs-keyword">except</span>:</span><br><span class="line">        log(<span class="hljs-string">'get_IP中发生了错误.'</span>)</span><br><span class="line">        <span class="hljs-keyword">return</span> <span class="hljs-string">""</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-comment"># 此处替换为你的域名</span></span><br><span class="line">domain = <span class="hljs-string">'xxxxx.xxx'</span></span><br><span class="line">last_ip = <span class="hljs-string">""</span></span><br><span class="line"><span class="hljs-keyword">while</span> <span class="hljs-literal">True</span>:</span><br><span class="line">    crt_ip=get_IP()</span><br><span class="line">    <span class="hljs-keyword">if</span> crt_ip!=<span class="hljs-string">""</span> <span class="hljs-keyword">and</span> crt_ip!=last_ip:</span><br><span class="line">        log(<span class="hljs-string">'监测到本机IP更新:'</span> + crt_ip)</span><br><span class="line">        last_ip=crt_ip</span><br><span class="line">        update_NS(domain, last_ip)</span><br><span class="line">    time.sleep(<span class="hljs-number">5</span>)</span><br></pre></td></tr></table></figure>
+<p>该脚本每隔5秒检测一次本机IP变化，并通过接口更新域名的A记录，实现DDNS的效果。</p>
+<p>在任意位置创建一个py脚本文件，输入以上脚本，注意脚本中部分变量要替换为你的数据。输入以下命令来测试脚本：<br><figure class="highlight bash hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment"># 切换到脚本所在的目录</span></span><br><span class="line">$ <span class="hljs-built_in">cd</span> /home/ddns</span><br><span class="line">$ python3 ddns.py</span><br></pre></td></tr></table></figure></p>
+<p>若脚本工作正常，按下Ctrl + C 终止脚本运行，然后输入以下命令后台运行脚本：<br><figure class="highlight bash hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ nohup ./ddns.py &gt; ddns.log 2&gt;&amp;1 &amp;</span><br></pre></td></tr></table></figure></p>
+<p>脚本的输出会重定向到ddns.log这个文件，你可以打开这个文件来查看脚本输出是否正常。</p>
+<p>一切没有问题的话，你就可以通过域名来访问你的服务器了。</p>
+<h2 id="第四步-安装Apache"><a href="#第四步-安装Apache" class="headerlink" title="第四步 安装Apache"></a>第四步 安装Apache</h2><figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo apt-get install apache2 -y</span><br></pre></td></tr></table></figure>
+<p>安装完成后Apache会自动启动。你也可以通过以下命令手动启动Apache：<br><figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo service apache2 start</span><br></pre></td></tr></table></figure></p>
+<p>使用浏览器访问你的IP或域名，若你能看到Ubuntu Apache2的欢迎页，证明你的Apache已经正常运行。</p>
+<h2 id="第五步-安装Mysql"><a href="#第五步-安装Mysql" class="headerlink" title="第五步 安装Mysql"></a>第五步 安装Mysql</h2><figure class="highlight bash hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment"># 安装MySQL</span></span><br><span class="line">$ sudo apt install mysql-server mysql-client</span><br><span class="line"><span class="hljs-comment"># 启动MySQL服务</span></span><br><span class="line">$ sudo service mysql start</span><br></pre></td></tr></table></figure>
+<p>若你使用root账号ssh登录到服务器执行命令，则安装过程中无需设置任何密码。安装完成后在终端输入指令 ‘mysql’ ,若能够进入mysql终端，则MySQL服务正常运行。</p>
+<h2 id="第六步-安装PHP"><a href="#第六步-安装PHP" class="headerlink" title="第六步 安装PHP"></a>第六步 安装PHP</h2><figure class="highlight bash hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment"># 安装PHP及相关组件</span></span><br><span class="line">$ sudo apt install php-mysql php-curl php-json php-cgi php libapache2-mod-php</span><br><span class="line"><span class="hljs-comment"># 重启Apache服务</span></span><br><span class="line">$ sudo service apache2 restart</span><br></pre></td></tr></table></figure>
+<p>验证PHP安装，在www/html目录下新建一个php脚本文件<br><figure class="highlight bash hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ vim /var/www/html/phpinfo.php</span><br></pre></td></tr></table></figure></p>
+<p>输入以下代码：<br><figure class="highlight php hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-meta">&lt;?php</span></span><br><span class="line">    <span class="hljs-keyword">echo</span> phpinfo();</span><br><span class="line"><span class="hljs-meta">?&gt;</span></span><br></pre></td></tr></table></figure></p>
+<p>保存并退出Vim编辑器，在浏览器中打开 <a href="http://你的地址或域名/phpinfo.php" target="_blank" rel="noopener">http://你的地址或域名/phpinfo.php</a> ,若你能够看到PHP的欢迎页面，说明你的PHP安装成功。</p>
+<h2 id="第七步-安装PHPMyAdmin"><a href="#第七步-安装PHPMyAdmin" class="headerlink" title="第七步 安装PHPMyAdmin"></a>第七步 安装PHPMyAdmin</h2><p>PHPMyAdmin是一个基于PHP的MySQL数据库管理系统，能够使你方便地对数据库进行管理。<br><figure class="highlight bash hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$ sudo apt install php-mbstring php7.0-mbstring php-gettext</span><br><span class="line">$ sudo systemctl restart apache2.service</span><br><span class="line">$ sudo apt install phpmyadmin</span><br></pre></td></tr></table></figure></p>
+<p>安装过程中一切选项保持默认即可。下一步，将PHPMyAdmin的安装目录连接到网页目录<br><figure class="highlight bash hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment"># 设置软连接</span></span><br><span class="line">$ sudo ln -s /usr/share/phpmyadmin /var/www/html/pma</span><br><span class="line"><span class="hljs-comment"># 重启Apache</span></span><br><span class="line">$ sudo /etc/init.d/apache2 restart</span><br></pre></td></tr></table></figure></p>
+<p>此时访问 <a href="http://你的地址或域名/pma" target="_blank" rel="noopener">http://你的地址或域名/pma</a> ,你将进入到phpmyadmin的登录页面。但使用root账号无法登录。下一步我们将配置一个用于登录phpmyadmin的mysql账号：<br><figure class="highlight bash hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment"># 进入MySQL</span></span><br><span class="line">$ mysql</span><br><span class="line"><span class="hljs-comment"># 切换数据库</span></span><br><span class="line">mysql&gt; use mysql</span><br><span class="line"><span class="hljs-comment"># 创建一个用户,用户名为test,密码为1234</span></span><br><span class="line">mysql&gt; insert into mysql.user(Host,User,Password) values(<span class="hljs-string">"%"</span>,<span class="hljs-string">"test"</span>,password(<span class="hljs-string">"1234"</span>));</span><br><span class="line"><span class="hljs-comment"># 为该用户授予所有权限，注意密码要一致</span></span><br><span class="line">mysql&gt; grant all privileges on *.* to <span class="hljs-built_in">test</span>@% identified by <span class="hljs-string">'1234'</span>;</span><br><span class="line"><span class="hljs-comment"># 刷新权限</span></span><br><span class="line">mysql&gt; flush privileges;</span><br></pre></td></tr></table></figure></p>
+<p>此时再打开PhpMyAdmin的页面，你就可以通过刚才创建的用户登录并管理数据库了。</p>
+<p>至此，小型寝室网络服务器的基本环境搭建完成。</p>
+<h1 id="感谢阅读"><a href="#感谢阅读" class="headerlink" title="感谢阅读"></a>感谢阅读</h1><p><img src="https://ly-object-1259106193.cos.ap-chengdu.myqcloud.com/whut-electronic.jpg" alt></p>
+<hr>
+<div align="right">author:AZ</div>
+
+        </div>
+        
+        <div class="level is-size-7 is-uppercase">
+            <div class="level-start">
+                <div class="level-item">
+                    <span class="is-size-6 has-text-grey has-mr-7">#</span>
+                    <a class="has-link-grey -link" href="/tags/linux运维/">linux运维</a>
+                </div>
+            </div>
+        </div>
+        
+        
+        
+    </div>
+</div>
+
+
+
+<div class="card">
+    <div class="card-content">
+        <h3 class="menu-label has-text-centered">喜欢这篇文章？打赏一下作者吧</h3>
+        <div class="buttons is-centered">
+            
+                
+<div class="notification is-danger">
+    You forgot to set the <code>qrcode</code> for Alipay. Please set it in <code>_config.yml</code>.
+</div>
+
+                
+                
+<div class="notification is-danger">
+    You forgot to set the <code>qrcode</code> for Wechat. Please set it in <code>_config.yml</code>.
+</div>
+
+                
+                <!-- Visit https://www.paypal.com/donate/buttons/ to get your donate button -->
+
+<div class="notification is-danger">
+    You forgot to set the <code>business</code> and <code>currency_code</code> for Paypal. Please set it in <code>_config.yml</code>.
+</div>
+
+                
+                
+<div class="notification is-danger">
+    You forgot to set the <code>url</code> Patreon. Please set it in <code>_config.yml</code>.
+</div>
+
+                
+        </div>
+    </div>
+</div>
+
+
+
+<div class="card card-transparent">
+    <div class="level post-navigation is-flex-wrap is-mobile">
+        
+        <div class="level-start">
+            <a class="level level-item has-link-grey  article-nav-prev" href="/2019/05/28/网站刷在线时长/">
+                <i class="level-item fas fa-chevron-left"></i>
+                <span class="level-item">震惊!57行代码实现刷在线时长</span>
+            </a>
+        </div>
+        
+        
+        <div class="level-end">
+            <a class="level level-item has-link-grey  article-nav-next" href="/2019/05/14/second/">
+                <span class="level-item">代码简洁之道</span>
+                <i class="level-item fas fa-chevron-right"></i>
+            </a>
+        </div>
+        
+    </div>
+</div>
+
+
+</div>
+                
+
+
+
+
+<div class="column is-4-tablet is-4-desktop is-3-widescreen  has-order-1 column-left ">
+    
+        
+<div class="card widget">
+    <div class="card-content">
+        <nav class="level">
+            <div class="level-item has-text-centered" style="flex-shrink: 1">
+                <div>
+                    
+                        <img class="image is-128x128 has-mb-6" src="/images/avatar.png" alt="电子科技协会">
+                    
+                    
+                    <p class="is-size-4 is-block">
+                        电子科技协会
+                    </p>
+                    
+                    
+                    <p class="is-size-6 is-block">
+                        强迫自己优秀，然后骄傲地生活！
+                    </p>
+                    
+                    
+                    <p class="is-size-6 is-flex is-flex-center has-text-grey">
+                        <i class="fas fa-map-marker-alt has-mr-7"></i>
+                        <span>湖北 武汉</span>
+                    </p>
+                    
+                </div>
+            </div>
+        </nav>
+        <nav class="level is-mobile">
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        文章
+                    </p>
+                    <p class="title has-text-weight-normal">
+                        11
+                    </p>
+                </div>
+            </div>
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        分类
+                    </p>
+                    <p class="title has-text-weight-normal">
+                        2
+                    </p>
+                </div>
+            </div>
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        标签
+                    </p>
+                    <p class="title has-text-weight-normal">
+                        5
+                    </p>
+                </div>
+            </div>
+        </nav>
+        <div class="level">
+            <a class="level-item button is-link is-rounded" href="https://github.com/whut-electronic" target="_blank">
+                关注我</a>
+        </div>
+        
+        
+        <div class="level is-mobile">
+            
+            <a class="level-item button is-white is-marginless" target="_blank"
+                title="Github" href="https://github.com/ppoffice">
+                
+                <i class="fab fa-github"></i>
+                
+            </a>
+            
+            <a class="level-item button is-white is-marginless" target="_blank"
+                title="Facebook" href="https://facebook.com">
+                
+                <i class="fab fa-facebook"></i>
+                
+            </a>
+            
+            <a class="level-item button is-white is-marginless" target="_blank"
+                title="Twitter" href="https://twitter.com">
+                
+                <i class="fab fa-twitter"></i>
+                
+            </a>
+            
+            <a class="level-item button is-white is-marginless" target="_blank"
+                title="Dribbble" href="https://dribbble.com">
+                
+                <i class="fab fa-dribbble"></i>
+                
+            </a>
+            
+            <a class="level-item button is-white is-marginless" target="_blank"
+                title="RSS" href="/">
+                
+                <i class="fas fa-rss"></i>
+                
+            </a>
+            
+        </div>
+        
+    </div>
+</div>
+    
+        
+    
+        
+
+<div class="card widget">
+    <div class="card-content">
+        <div class="menu">
+        <h3 class="menu-label">
+            链接
+        </h3>
+        <ul class="menu-list">
+        
+            <li>
+                <a class="level is-mobile" href="https://hexo.io" target="_blank">
+                    <span class="level-left">
+                        <span class="level-item">Hexo</span>
+                    </span>
+                    <span class="level-right">
+                        <span class="level-item tag">hexo.io</span>
+                    </span>
+                </a>
+            </li>
+        
+            <li>
+                <a class="level is-mobile" href="https://github.com/ppoffice" target="_blank">
+                    <span class="level-left">
+                        <span class="level-item">PPOffice</span>
+                    </span>
+                    <span class="level-right">
+                        <span class="level-item tag">github.com</span>
+                    </span>
+                </a>
+            </li>
+        
+        </ul>
+        </div>
+    </div>
+</div>
+
+
+    
+        
+<div class="card widget">
+    <div class="card-content">
+        <div class="menu">
+            <h3 class="menu-label">
+                分类
+            </h3>
+            <ul class="menu-list">
+            <li>
+        <a class="level is-marginless" href="/categories/hexo/">
+            <span class="level-start">
+                <span class="level-item">hexo</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">3</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/linux运维/">
+            <span class="level-start">
+                <span class="level-item">linux运维</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">2</span>
+            </span>
+        </a></li>
+            </ul>
+        </div>
+    </div>
+</div>
+    
+        
+<div class="card widget">
+    <div class="card-content">
+        <h3 class="menu-label">
+            标签云
+        </h3>
+        <a href="/tags/Node-js/" style="font-size: 10px;">Node.js</a> <a href="/tags/hexo/" style="font-size: 20px;">hexo</a> <a href="/tags/linux运维/" style="font-size: 20px;">linux运维</a> <a href="/tags/代码规范/" style="font-size: 15px;">代码规范</a> <a href="/tags/网络编程/" style="font-size: 10px;">网络编程</a>
+    </div>
+</div>
+
+    
+    
+        <div class="column-right-shadow is-hidden-widescreen ">
+        
+            
+<div class="card widget">
+    <div class="card-content">
+        <h3 class="menu-label">
+            最新文章
+        </h3>
+        
+        <article class="media">
+            
+            <a href="/2019/08/07/基于-Net-Core的微型Http服务框架/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/thumbnail.svg" alt="基于.Net Core的微型Http服务框架">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-08-07T11:43:00.000Z">2019-08-07</time></div>
+                    <a href="/2019/08/07/基于-Net-Core的微型Http服务框架/" class="title has-link-black-ter is-size-6 has-text-weight-normal">基于.Net Core的微型Http服务框架</a>
+                    <p class="is-size-7 is-uppercase">
+                        
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2019/07/14/hexo-2/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/thumbnail.svg" alt="更换电脑或重装系统前后对原hexo博客的处理">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-07-14T03:25:00.000Z">2019-07-14</time></div>
+                    <a href="/2019/07/14/hexo-2/" class="title has-link-black-ter is-size-6 has-text-weight-normal">更换电脑或重装系统前后对原hexo博客的处理</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/hexo/">hexo</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2019/07/14/手把手教你用hexo搭建个人博客/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/thumbnail.svg" alt="手把手教你用hexo搭建个人博客">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-07-14T03:23:26.000Z">2019-07-14</time></div>
+                    <a href="/2019/07/14/手把手教你用hexo搭建个人博客/" class="title has-link-black-ter is-size-6 has-text-weight-normal">手把手教你用hexo搭建个人博客</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/hexo/">hexo</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2019/06/23/code/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/thumbnail.svg" alt="如何写出无法维护的代码">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-06-23T12:06:18.000Z">2019-06-23</time></div>
+                    <a href="/2019/06/23/code/" class="title has-link-black-ter is-size-6 has-text-weight-normal">如何写出无法维护的代码</a>
+                    <p class="is-size-7 is-uppercase">
+                        
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2019/06/22/如何用程序实现魔方的旋转/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/thumbnail.svg" alt="如何用程序实现魔方的旋转">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-06-22T05:23:24.000Z">2019-06-22</time></div>
+                    <a href="/2019/06/22/如何用程序实现魔方的旋转/" class="title has-link-black-ter is-size-6 has-text-weight-normal">如何用程序实现魔方的旋转</a>
+                    <p class="is-size-7 is-uppercase">
+                        
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+    </div>
+</div>
+
+        
+            <div class="card widget">
+    <div class="card-content">
+        <div class="menu">
+        <h3 class="menu-label">
+            归档
+        </h3>
+        <ul class="menu-list">
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/08/">
+                <span class="level-start">
+                    <span class="level-item">八月 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/07/">
+                <span class="level-start">
+                    <span class="level-item">七月 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/06/">
+                <span class="level-start">
+                    <span class="level-item">六月 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">5</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/05/">
+                <span class="level-start">
+                    <span class="level-item">五月 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">3</span>
+                </span>
+            </a>
+        </li>
+        
+        </ul>
+        </div>
+    </div>
+</div>
+        
+            <div class="card widget">
+    <div class="card-content">
+        <div class="menu">
+            <h3 class="menu-label">
+                标签
+            </h3>
+            <div class="field is-grouped is-grouped-multiline">
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Node-js/">
+                        <span class="tag">Node.js</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/hexo/">
+                        <span class="tag">hexo</span>
+                        <span class="tag is-grey">3</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/linux运维/">
+                        <span class="tag">linux运维</span>
+                        <span class="tag is-grey">3</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/代码规范/">
+                        <span class="tag">代码规范</span>
+                        <span class="tag is-grey">2</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/网络编程/">
+                        <span class="tag">网络编程</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+</div>
+        
+        </div>
+    
+</div>
+
+                
+
+
+
+
+<div class="column is-4-tablet is-4-desktop is-3-widescreen is-hidden-touch is-hidden-desktop-only has-order-3 column-right ">
+    
+        
+<div class="card widget">
+    <div class="card-content">
+        <h3 class="menu-label">
+            最新文章
+        </h3>
+        
+        <article class="media">
+            
+            <a href="/2019/08/07/基于-Net-Core的微型Http服务框架/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/thumbnail.svg" alt="基于.Net Core的微型Http服务框架">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-08-07T11:43:00.000Z">2019-08-07</time></div>
+                    <a href="/2019/08/07/基于-Net-Core的微型Http服务框架/" class="title has-link-black-ter is-size-6 has-text-weight-normal">基于.Net Core的微型Http服务框架</a>
+                    <p class="is-size-7 is-uppercase">
+                        
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2019/07/14/hexo-2/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/thumbnail.svg" alt="更换电脑或重装系统前后对原hexo博客的处理">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-07-14T03:25:00.000Z">2019-07-14</time></div>
+                    <a href="/2019/07/14/hexo-2/" class="title has-link-black-ter is-size-6 has-text-weight-normal">更换电脑或重装系统前后对原hexo博客的处理</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/hexo/">hexo</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2019/07/14/手把手教你用hexo搭建个人博客/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/thumbnail.svg" alt="手把手教你用hexo搭建个人博客">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-07-14T03:23:26.000Z">2019-07-14</time></div>
+                    <a href="/2019/07/14/手把手教你用hexo搭建个人博客/" class="title has-link-black-ter is-size-6 has-text-weight-normal">手把手教你用hexo搭建个人博客</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/hexo/">hexo</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2019/06/23/code/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/thumbnail.svg" alt="如何写出无法维护的代码">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-06-23T12:06:18.000Z">2019-06-23</time></div>
+                    <a href="/2019/06/23/code/" class="title has-link-black-ter is-size-6 has-text-weight-normal">如何写出无法维护的代码</a>
+                    <p class="is-size-7 is-uppercase">
+                        
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2019/06/22/如何用程序实现魔方的旋转/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/thumbnail.svg" alt="如何用程序实现魔方的旋转">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-06-22T05:23:24.000Z">2019-06-22</time></div>
+                    <a href="/2019/06/22/如何用程序实现魔方的旋转/" class="title has-link-black-ter is-size-6 has-text-weight-normal">如何用程序实现魔方的旋转</a>
+                    <p class="is-size-7 is-uppercase">
+                        
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+    </div>
+</div>
+
+    
+        <div class="card widget">
+    <div class="card-content">
+        <div class="menu">
+        <h3 class="menu-label">
+            归档
+        </h3>
+        <ul class="menu-list">
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/08/">
+                <span class="level-start">
+                    <span class="level-item">八月 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/07/">
+                <span class="level-start">
+                    <span class="level-item">七月 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/06/">
+                <span class="level-start">
+                    <span class="level-item">六月 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">5</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/05/">
+                <span class="level-start">
+                    <span class="level-item">五月 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">3</span>
+                </span>
+            </a>
+        </li>
+        
+        </ul>
+        </div>
+    </div>
+</div>
+    
+        <div class="card widget">
+    <div class="card-content">
+        <div class="menu">
+            <h3 class="menu-label">
+                标签
+            </h3>
+            <div class="field is-grouped is-grouped-multiline">
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Node-js/">
+                        <span class="tag">Node.js</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/hexo/">
+                        <span class="tag">hexo</span>
+                        <span class="tag is-grey">3</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/linux运维/">
+                        <span class="tag">linux运维</span>
+                        <span class="tag is-grey">3</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/代码规范/">
+                        <span class="tag">代码规范</span>
+                        <span class="tag is-grey">2</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/网络编程/">
+                        <span class="tag">网络编程</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+</div>
+    
+    
+</div>
+
+            </div>
+        </div>
+    </section>
+    <footer class="footer">
+    <div class="container">
+        <div class="level">
+            <div class="level-start has-text-centered-mobile">
+                <a class="footer-logo is-block has-mb-6" href="/">
+                
+                    <img src="/images/logo.svg" alt="寝室微型网络服务器的配置（Ubuntu+LAMP)" height="28">
+                
+                </a>
+                <p class="is-size-7">
+                &copy; 2019 电子科技协会&nbsp;
+                Powered by <a href="https://hexo.io/" target="_blank">Hexo</a> & <a
+                        href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank">Icarus</a>
+                
+                </p>
+            </div>
+            <div class="level-end">
+            
+                <div class="field has-addons is-flex-center-mobile has-mt-5-mobile is-flex-wrap is-flex-middle">
+                
+                
+                <p class="control">
+                    <a class="button is-white is-large" target="_blank" title="Creative Commons" href="https://creativecommons.org/">
+                        
+                        <i class="fab fa-creative-commons"></i>
+                        
+                    </a>
+                </p>
+                
+                <p class="control">
+                    <a class="button is-white is-large" target="_blank" title="Attribution 4.0 International" href="https://creativecommons.org/licenses/by/4.0/">
+                        
+                        <i class="fab fa-creative-commons-by"></i>
+                        
+                    </a>
+                </p>
+                
+                <p class="control">
+                    <a class="button is-white is-large" target="_blank" title="Download on GitHub" href="https://github.com/ppoffice/hexo-theme-icarus">
+                        
+                        <i class="fab fa-github"></i>
+                        
+                    </a>
+                </p>
+                
+                </div>
+            
+            </div>
+        </div>
+    </div>
+</footer>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script>
+<script>moment.locale("zh-CN");</script>
+
+<script>
+var IcarusThemeSettings = {
+    article: {
+        highlight: {
+            clipboard: true,
+            fold: 'unfolded'
+        }
+    }
+};
+</script>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script>
+
+
+
+    
+    
+    
+    <script src="/js/animation.js"></script>
+    
+
+    
+    
+    
+    <script src="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/js/lightgallery.min.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js" defer></script>
+    <script src="/js/gallery.js" defer></script>
+    
+
+    
+    
+
+<div id="outdated">
+    <h6>Your browser is out-of-date!</h6>
+    <p>Update your browser to view this website correctly. <a id="btnUpdateBrowser" href="http://outdatedbrowser.com/">Update
+            my browser now </a></p>
+    <p class="last"><a href="#" id="btnCloseUpdateBrowser" title="Close">&times;</a></p>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.js" defer></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        outdatedBrowser({
+            bgColor: '#f25648',
+            color: '#ffffff',
+            lowerThan: 'flex'
+        });
+    });
+</script>
+
+
+    
+    
+<script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.5/unpacked/MathJax.js?config=TeX-MML-AM_CHTML" defer></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    MathJax.Hub.Config({
+        'HTML-CSS': {
+            matchFontHeight: false
+        },
+        SVG: {
+            matchFontHeight: false
+        },
+        CommonHTML: {
+            matchFontHeight: false
+        },
+        tex2jax: {
+            inlineMath: [
+                ['$','$'],
+                ['\\(','\\)']
+            ]
+        }
+    });
+});
+</script>
+
+    
+    
+
+<a id="back-to-top" title="回到顶端" href="javascript:;">
+    <i class="fas fa-chevron-up"></i>
+</a>
+<script src="/js/back-to-top.js" defer></script>
+
+
+    
+    
+
+    
+    
+    
+    
+
+    
+    
+    
+    
+    
+
+
+<script src="/js/main.js" defer></script>
+
+    
+    <div class="searchbox ins-search">
+    <div class="searchbox-container ins-search-container">
+        <div class="searchbox-input-wrapper">
+            <input type="text" class="searchbox-input ins-search-input" placeholder="想要查找什么..." />
+            <span class="searchbox-close ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="searchbox-result-wrapper ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+    (function (window) {
+        var INSIGHT_CONFIG = {
+            TRANSLATION: {
+                POSTS: '文章',
+                PAGES: '页面',
+                CATEGORIES: '分类',
+                TAGS: '标签',
+                UNTITLED: '(无标题)',
+            },
+            CONTENT_URL: '/content.json',
+        };
+        window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+    })(window);
+</script>
+<script src="/js/insight.js" defer></script>
+<link rel="stylesheet" href="/css/search.css">
+<link rel="stylesheet" href="/css/insight.css">
+    
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({ tex2jax: { inlineMath: [ ["$","$"], ["\\(","\\)"] ], skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'], processEscapes: true } }); MathJax.Hub.Queue(function() { var all = MathJax.Hub.getAllJax(); for (var i = 0;
+    i
+    < all.length; ++i) all[i].SourceElement().parentNode.className +=' has-jax' ; }); </script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+</body>
+</html>

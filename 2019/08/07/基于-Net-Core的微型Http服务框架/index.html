@@ -1,0 +1,1096 @@
+<!DOCTYPE html>
+<html  lang="zh">
+<head>
+    <meta charset="utf-8" />
+
+<meta name="generator" content="Hexo 3.8.0" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+
+<title>基于.Net Core的微型Http服务框架 - 武汉理工大学电子科技协会</title>
+
+
+    <meta name="description" content=".Net Core是由微软公司开发的一套开源的，具有跨平台能力（Windows，Linux，Mac OSX）的应用程序开发框架。本人最近用.net写了一套简单的Http服务框架，并集成了MySql数据库，写此博文作为分享，也为了防止自己遗忘。本文适合了解Http协议的原理，以及面向对象程序设计各种概念的读者。 服务的组织架构一个Http服务器会负责多个Http服务，即一个Http服务器存在多个接口">
+<meta name="keywords" content="网络编程">
+<meta property="og:type" content="article">
+<meta property="og:title" content="基于.Net Core的微型Http服务框架">
+<meta property="og:url" content="https://whut-electronic.github.io/2019/08/07/基于-Net-Core的微型Http服务框架/index.html">
+<meta property="og:site_name" content="武汉理工大学电子科技协会">
+<meta property="og:description" content=".Net Core是由微软公司开发的一套开源的，具有跨平台能力（Windows，Linux，Mac OSX）的应用程序开发框架。本人最近用.net写了一套简单的Http服务框架，并集成了MySql数据库，写此博文作为分享，也为了防止自己遗忘。本文适合了解Http协议的原理，以及面向对象程序设计各种概念的读者。 服务的组织架构一个Http服务器会负责多个Http服务，即一个Http服务器存在多个接口">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="https://whut-electronic.github.io/images/og_image.png">
+<meta property="og:updated_time" content="2019-08-08T05:27:25.355Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="基于.Net Core的微型Http服务框架">
+<meta name="twitter:description" content=".Net Core是由微软公司开发的一套开源的，具有跨平台能力（Windows，Linux，Mac OSX）的应用程序开发框架。本人最近用.net写了一套简单的Http服务框架，并集成了MySql数据库，写此博文作为分享，也为了防止自己遗忘。本文适合了解Http协议的原理，以及面向对象程序设计各种概念的读者。 服务的组织架构一个Http服务器会负责多个Http服务，即一个Http服务器存在多个接口">
+<meta name="twitter:image" content="https://whut-electronic.github.io/images/og_image.png">
+
+
+
+
+
+
+
+<link rel="icon" href="/images/favicon.ico">
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.7.2/css/bulma.css">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu:400,600|Source+Code+Pro">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-dark.css">
+
+
+    
+    
+    
+    <style>body>.footer,body>.navbar,body>.section{opacity:0}</style>
+    
+
+    
+    
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/css/lightgallery.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/css/justifiedGallery.min.css">
+    
+
+    
+    
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.css">
+
+
+    
+    
+    
+    
+
+<link rel="stylesheet" href="/css/back-to-top.css">
+
+
+    
+    
+
+    
+    
+    
+    
+
+    
+    
+<link rel="stylesheet" href="/css/progressbar.css">
+<script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script>
+
+    
+    
+    
+
+
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<body class="is-3-column">
+    <nav class="navbar navbar-main">
+    <div class="container">
+        <div class="navbar-brand is-flex-center">
+            <a class="navbar-item navbar-logo" href="/">
+            
+                <img src="/images/logo.svg" alt="基于.Net Core的微型Http服务框架" height="28">
+            
+            </a>
+        </div>
+        <div class="navbar-menu">
+            
+            <div class="navbar-start">
+                
+                <a class="navbar-item"
+                href="/">主页</a>
+                
+                <a class="navbar-item"
+                href="/archives">归档</a>
+                
+                <a class="navbar-item"
+                href="/categories">分类</a>
+                
+                <a class="navbar-item"
+                href="/tags">标签</a>
+                
+                <a class="navbar-item"
+                href="/about">关于</a>
+                
+            </div>
+            
+            <div class="navbar-end">
+                
+                    
+                    
+                    <a class="navbar-item" target="_blank" title="Download on GitHub" href="https://github.com/ppoffice/hexo-theme-icarus">
+                        
+                        <i class="fab fa-github"></i>
+                        
+                    </a>
+                    
+                
+                
+                
+                <a class="navbar-item search" title="搜索" href="javascript:;">
+                    <i class="fas fa-search"></i>
+                </a>
+                
+            </div>
+        </div>
+    </div>
+</nav>
+    
+    <section class="section">
+        <div class="container">
+            <div class="columns">
+                <div class="column is-8-tablet is-8-desktop is-6-widescreen has-order-2 column-main"><div class="card">
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2019-08-07T11:43:00.000Z">2019-08-07</time>
+                
+                
+                <span class="level-item has-text-grey">
+                    
+                    
+                    1 小时 读完 (大约 11743 个字)
+                </span>
+                
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                基于.Net Core的微型Http服务框架
+            
+        </h1>
+        <div class="content">
+            <p>.Net Core是由微软公司开发的一套开源的，具有跨平台能力（Windows，Linux，Mac OSX）的应用程序开发框架。本人最近用.net写了一套简单的Http服务框架，并集成了MySql数据库，写此博文作为分享，也为了防止自己遗忘。本文适合了解Http协议的原理，以及面向对象程序设计各种概念的读者。</p>
+<h2 id="服务的组织架构"><a href="#服务的组织架构" class="headerlink" title="服务的组织架构"></a>服务的组织架构</h2><p>一个Http服务器会负责多个Http服务，即一个Http服务器存在多个接口，这些接口的业务应互不干扰。而每个接口的业务都涉及数据的处理、数据库的读写等操作。因此考虑将每个服务分为控制层(Controller)和数据层(Model)。控制层负责服务逻辑的控制，数据层负责数据的操作。同时，服务因该具有高度的可拓展性，即新服务的加入应该是便捷的。因此应该有一个服务管理器，能够动态添加或删除服务。为了方便，我们将每个服务都称之为应用（Application）。<br>在这种架构中，所有Http请求应携带应用标识符，以方便服务端区分请求的是哪一个应用。服务端接收Http请求后，通过标识符将请求参数下发给相应的应用，应用处理结束后，将要返回的数据通知给Http服务器，然后服务器回应数据，这样便完成了一次Http请求的处理。<br>综合以上分析，所有的应用都应继承自以下接口：<br><figure class="highlight cs hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">interface</span> <span class="hljs-title">IApplication</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="hljs-keyword">string</span> Name &#123; <span class="hljs-keyword">get</span>; &#125;</span><br><span class="line">    <span class="hljs-function">HttpResponseArgs <span class="hljs-title">Handle</span>(<span class="hljs-params">HttpArgs args</span>)</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<a id="more"></a>
+<p>其中，Name属性是唯一的，即这个应用的名称，用来区分不同的应用；Handle为该Application的处理逻辑。HttpArgs是Http请求参数，HttpResponseArgs是Http响应参数，将请求参数传递给对应的Application后，要求其返回一个HttpResponseArgs，用来对请求进行回应。<br>这样一来，不同的应用即为不同的类，他们都实现IApplication这个接口。因此，添加一个应用，只需添加一个该应用的实例即可。<br><figure class="highlight cs hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">class</span> <span class="hljs-title">Application</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="hljs-keyword">static</span> Dictionary&lt;<span class="hljs-keyword">string</span>, Type&gt; appTypes = <span class="hljs-keyword">new</span> Dictionary&lt;<span class="hljs-keyword">string</span>, Type&gt;();</span><br><span class="line">        <span class="hljs-keyword">static</span> <span class="hljs-keyword">string</span> appKey = <span class="hljs-string">"app"</span>;</span><br><span class="line">        <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">bool</span> <span class="hljs-title">LoadApp</span>(<span class="hljs-params">Type appType</span>)</span></span><br><span class="line"><span class="hljs-function"></span>        &#123;</span><br><span class="line">            <span class="hljs-keyword">if</span> (!<span class="hljs-keyword">typeof</span>(IApplication).IsAssignableFrom(appType)) <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;</span><br><span class="line">            <span class="hljs-keyword">var</span> construct = appType.GetConstructor(<span class="hljs-keyword">new</span> Type[<span class="hljs-number">0</span>]);</span><br><span class="line">            <span class="hljs-keyword">var</span> app = (IApplication)construct.Invoke(<span class="hljs-literal">null</span>);</span><br><span class="line">            <span class="hljs-keyword">if</span> (appTypes.ContainsKey(app.Name)) <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;</span><br><span class="line">            appTypes.Add(app.Name, appType);</span><br><span class="line">            <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">bool</span> <span class="hljs-title">UnloadApp</span>(<span class="hljs-params"><span class="hljs-keyword">string</span> appName</span>)</span></span><br><span class="line"><span class="hljs-function"></span>        &#123;</span><br><span class="line">            <span class="hljs-keyword">if</span> (appTypes.ContainsKey(appName))</span><br><span class="line">                appTypes.Remove(appName);</span><br><span class="line">            <span class="hljs-keyword">else</span></span><br><span class="line">                <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;</span><br><span class="line">            <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">SetAppKeyString</span>(<span class="hljs-params"><span class="hljs-keyword">string</span> keystr = <span class="hljs-string">"app"</span></span>)</span></span><br><span class="line"><span class="hljs-function"></span>        &#123;</span><br><span class="line">            appKey = keystr;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> HttpResponseArgs <span class="hljs-title">Handle</span>(<span class="hljs-params">HttpArgs args</span>)</span></span><br><span class="line"><span class="hljs-function"></span>        &#123;</span><br><span class="line">            <span class="hljs-keyword">if</span> (!appTypes.ContainsKey(args.GetArgValue(appKey))) <span class="hljs-keyword">return</span> <span class="hljs-literal">null</span>;</span><br><span class="line">            <span class="hljs-keyword">var</span> construct = appTypes[args.GetArgValue(appKey)].GetConstructor(<span class="hljs-keyword">new</span> Type[<span class="hljs-number">0</span>]);</span><br><span class="line">            <span class="hljs-keyword">var</span> app = (IApplication)construct.Invoke(<span class="hljs-literal">null</span>);</span><br><span class="line">            <span class="hljs-keyword">return</span> app.Handle(args);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure></p>
+<p>appTypes字典用于存放应用类型，与应用的Name相对应。LoadApp方法用来加载一个应用，对应用进行去重判断以后获取一个该应用的实例，并添加到字典中；UnloadApp方法用来卸载一个应用，与LoadApp相对应。SetAppKeyString用来设置http请求参数中区别不同app的参数键，默认为”app”。Handle用于接收Http请求参数后向对应的app进行下发，获取到app处理后的返回参数后返回给Http服务器。</p>
+<h2 id="数据操作层"><a href="#数据操作层" class="headerlink" title="数据操作层"></a>数据操作层</h2><p>服务端的每个app都会涉及到数据操作。不同的app的数据会有很大的区别，但是很多数据操作，比如对数据库的增删查改，都是类似的。因此考虑创建一个基类，其中包含通用的数据处理和数据库操作方法，然后所有应用的数据层都继承自这个类。（下列代码均为具体实现，不必仔细阅读）<br><figure class="highlight cs hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br><span class="line">199</span><br><span class="line">200</span><br><span class="line">201</span><br><span class="line">202</span><br><span class="line">203</span><br><span class="line">204</span><br><span class="line">205</span><br><span class="line">206</span><br><span class="line">207</span><br><span class="line">208</span><br><span class="line">209</span><br><span class="line">210</span><br><span class="line">211</span><br><span class="line">212</span><br><span class="line">213</span><br><span class="line">214</span><br><span class="line">215</span><br><span class="line">216</span><br><span class="line">217</span><br><span class="line">218</span><br><span class="line">219</span><br><span class="line">220</span><br><span class="line">221</span><br><span class="line">222</span><br><span class="line">223</span><br><span class="line">224</span><br><span class="line">225</span><br><span class="line">226</span><br><span class="line">227</span><br><span class="line">228</span><br><span class="line">229</span><br><span class="line">230</span><br><span class="line">231</span><br><span class="line">232</span><br><span class="line">233</span><br><span class="line">234</span><br><span class="line">235</span><br><span class="line">236</span><br><span class="line">237</span><br><span class="line">238</span><br><span class="line">239</span><br><span class="line">240</span><br><span class="line">241</span><br><span class="line">242</span><br><span class="line">243</span><br><span class="line">244</span><br><span class="line">245</span><br><span class="line">246</span><br><span class="line">247</span><br><span class="line">248</span><br><span class="line">249</span><br><span class="line">250</span><br><span class="line">251</span><br><span class="line">252</span><br><span class="line">253</span><br><span class="line">254</span><br><span class="line">255</span><br><span class="line">256</span><br><span class="line">257</span><br><span class="line">258</span><br><span class="line">259</span><br><span class="line">260</span><br><span class="line">261</span><br><span class="line">262</span><br><span class="line">263</span><br><span class="line">264</span><br><span class="line">265</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">class</span> <span class="hljs-title">BaseModel</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="hljs-comment"><span class="hljs-doctag">///</span> <span class="hljs-doctag">&lt;summary&gt;</span></span></span><br><span class="line">        <span class="hljs-comment"><span class="hljs-doctag">///</span> 数据表名</span></span><br><span class="line">        <span class="hljs-comment"><span class="hljs-doctag">///</span> <span class="hljs-doctag">&lt;/summary&gt;</span></span></span><br><span class="line">        <span class="hljs-keyword">protected</span> <span class="hljs-keyword">virtual</span> <span class="hljs-keyword">string</span> TableName &#123; <span class="hljs-keyword">get</span>; &#125;</span><br><span class="line">        <span class="hljs-comment"><span class="hljs-doctag">///</span> <span class="hljs-doctag">&lt;summary&gt;</span></span></span><br><span class="line">        <span class="hljs-comment"><span class="hljs-doctag">///</span> 判断数据表中是否存在指定数据</span></span><br><span class="line">        <span class="hljs-comment"><span class="hljs-doctag">///</span> <span class="hljs-doctag">&lt;/summary&gt;</span></span></span><br><span class="line">        <span class="hljs-comment"><span class="hljs-doctag">///</span> <span class="hljs-doctag">&lt;param name="limit"&gt;</span>查找条件<span class="hljs-doctag">&lt;/param&gt;</span></span></span><br><span class="line">        <span class="hljs-comment"><span class="hljs-doctag">///</span> <span class="hljs-doctag">&lt;returns&gt;</span><span class="hljs-doctag">&lt;/returns&gt;</span></span></span><br><span class="line">        <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">bool</span> <span class="hljs-title">Find</span>(<span class="hljs-params">Dictionary&lt;<span class="hljs-keyword">string</span>, <span class="hljs-keyword">object</span>&gt; limit</span>)</span></span><br><span class="line"><span class="hljs-function"></span>        &#123;</span><br><span class="line">            <span class="hljs-keyword">var</span> conn = DataBase.GetConnection();</span><br><span class="line">            conn.Open();</span><br><span class="line">            <span class="hljs-keyword">var</span> findstr = <span class="hljs-keyword">string</span>.Format(<span class="hljs-string">"select * from &#123;0&#125; where"</span>, TableName);</span><br><span class="line">            StringBuilder sb = <span class="hljs-keyword">new</span> StringBuilder(findstr);</span><br><span class="line">            <span class="hljs-keyword">foreach</span> (<span class="hljs-keyword">var</span> kv <span class="hljs-keyword">in</span> limit)</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="hljs-keyword">var</span> key = kv.Key;</span><br><span class="line">                <span class="hljs-keyword">if</span> ((!<span class="hljs-string">"&lt;&gt;="</span>.Contains(key.TrimEnd(<span class="hljs-string">' '</span>).Last())) &amp;&amp; (!key.ToUpper().Contains(<span class="hljs-string">" LIKE"</span>))) key += <span class="hljs-string">'='</span>;</span><br><span class="line">                sb.AppendFormat(<span class="hljs-string">" &#123;0&#125;'&#123;1&#125;' and"</span>, key, kv.Value);</span><br><span class="line">            &#125;</span><br><span class="line">            sb.Remove(sb.Length - <span class="hljs-number">3</span>, <span class="hljs-number">3</span>);</span><br><span class="line">            findstr = sb.ToString();</span><br><span class="line">            MySqlCommand cmd = <span class="hljs-keyword">new</span> MySqlCommand(findstr, conn);</span><br><span class="line">            MySqlDataReader reader = cmd.ExecuteReader();</span><br><span class="line">            <span class="hljs-keyword">var</span> result = <span class="hljs-literal">false</span>;</span><br><span class="line">            <span class="hljs-keyword">if</span> (reader.Read()) result = <span class="hljs-literal">true</span>;</span><br><span class="line">            conn.Close();</span><br><span class="line">            <span class="hljs-keyword">return</span> result;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="hljs-comment"><span class="hljs-doctag">///</span> <span class="hljs-doctag">&lt;summary&gt;</span></span></span><br><span class="line">        <span class="hljs-comment"><span class="hljs-doctag">///</span> 判断数据表中是否存在指定数据</span></span><br><span class="line">        <span class="hljs-comment"><span class="hljs-doctag">///</span> <span class="hljs-doctag">&lt;/summary&gt;</span></span></span><br><span class="line">        <span class="hljs-comment"><span class="hljs-doctag">///</span> <span class="hljs-doctag">&lt;param name="key"&gt;</span>查找键<span class="hljs-doctag">&lt;/param&gt;</span></span></span><br><span class="line">        <span class="hljs-comment"><span class="hljs-doctag">///</span> <span class="hljs-doctag">&lt;param name="value"&gt;</span>查找值<span class="hljs-doctag">&lt;/param&gt;</span></span></span><br><span class="line">        <span class="hljs-comment"><span class="hljs-doctag">///</span> <span class="hljs-doctag">&lt;returns&gt;</span><span class="hljs-doctag">&lt;/returns&gt;</span></span></span><br><span class="line">        <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">bool</span> <span class="hljs-title">Find</span>(<span class="hljs-params"><span class="hljs-keyword">string</span> key, <span class="hljs-keyword">string</span> <span class="hljs-keyword">value</span></span>)</span></span><br><span class="line"><span class="hljs-function"></span>        &#123;</span><br><span class="line">            <span class="hljs-keyword">var</span> conn = DataBase.GetConnection();</span><br><span class="line">            conn.Open();</span><br><span class="line">            <span class="hljs-keyword">var</span> findstr = <span class="hljs-keyword">string</span>.Format(<span class="hljs-string">"select * from &#123;0&#125; where &#123;1&#125;='&#123;2&#125;'"</span>, TableName, key, <span class="hljs-keyword">value</span>);</span><br><span class="line">            MySqlCommand cmd = <span class="hljs-keyword">new</span> MySqlCommand(findstr, conn);</span><br><span class="line">            MySqlDataReader reader = cmd.ExecuteReader();</span><br><span class="line">            <span class="hljs-keyword">var</span> result = <span class="hljs-literal">false</span>;</span><br><span class="line">            <span class="hljs-keyword">if</span> (reader.Read()) result = <span class="hljs-literal">true</span>;</span><br><span class="line">            conn.Close();</span><br><span class="line">            <span class="hljs-keyword">return</span> result;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="hljs-comment"><span class="hljs-doctag">///</span> <span class="hljs-doctag">&lt;summary&gt;</span></span></span><br><span class="line">        <span class="hljs-comment"><span class="hljs-doctag">///</span> 从数据表中获取指定数据</span></span><br><span class="line">        <span class="hljs-comment"><span class="hljs-doctag">///</span> <span class="hljs-doctag">&lt;/summary&gt;</span></span></span><br><span class="line">        <span class="hljs-comment"><span class="hljs-doctag">///</span> <span class="hljs-doctag">&lt;param name="key"&gt;</span>查找键<span class="hljs-doctag">&lt;/param&gt;</span></span></span><br><span class="line">        <span class="hljs-comment"><span class="hljs-doctag">///</span> <span class="hljs-doctag">&lt;param name="value"&gt;</span>查找值<span class="hljs-doctag">&lt;/param&gt;</span></span></span><br><span class="line">        <span class="hljs-comment"><span class="hljs-doctag">///</span> <span class="hljs-doctag">&lt;returns&gt;</span><span class="hljs-doctag">&lt;/returns&gt;</span></span></span><br><span class="line">        <span class="hljs-keyword">public</span> List&lt;Dictionary&lt;<span class="hljs-keyword">string</span>, <span class="hljs-keyword">object</span>&gt;&gt; Select(<span class="hljs-keyword">string</span> key, <span class="hljs-keyword">string</span> <span class="hljs-keyword">value</span>)</span><br><span class="line">        &#123;</span><br><span class="line">            List&lt;Dictionary&lt;<span class="hljs-keyword">string</span>, <span class="hljs-keyword">object</span>&gt;&gt; result = <span class="hljs-keyword">new</span> List&lt;Dictionary&lt;<span class="hljs-keyword">string</span>, <span class="hljs-keyword">object</span>&gt;&gt;();</span><br><span class="line">            <span class="hljs-keyword">var</span> conn = DataBase.GetConnection();</span><br><span class="line">            conn.Open();</span><br><span class="line">            <span class="hljs-keyword">var</span> restric = <span class="hljs-keyword">new</span> <span class="hljs-keyword">string</span>[<span class="hljs-number">4</span>];</span><br><span class="line">            restric[<span class="hljs-number">2</span>] = TableName;</span><br><span class="line">            <span class="hljs-keyword">var</span> table = conn.GetSchema(<span class="hljs-string">"Columns"</span>, restric);</span><br><span class="line">            List&lt;<span class="hljs-keyword">string</span>&gt; colums = <span class="hljs-keyword">new</span> List&lt;<span class="hljs-keyword">string</span>&gt;();</span><br><span class="line">            <span class="hljs-keyword">foreach</span> (DataRow r <span class="hljs-keyword">in</span> table.Rows)</span><br><span class="line">            &#123;</span><br><span class="line">                colums.Add(r[<span class="hljs-string">"column_name"</span>].ToString());</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="hljs-keyword">var</span> findstr = <span class="hljs-keyword">string</span>.Format(<span class="hljs-string">"select * from &#123;0&#125; where &#123;1&#125;='&#123;2&#125;'"</span>, TableName, key, <span class="hljs-keyword">value</span>);</span><br><span class="line">            MySqlCommand cmd = <span class="hljs-keyword">new</span> MySqlCommand(findstr, conn);</span><br><span class="line">            MySqlDataReader reader = cmd.ExecuteReader();</span><br><span class="line">            <span class="hljs-keyword">while</span> (reader.Read())</span><br><span class="line">            &#123;</span><br><span class="line">                Dictionary&lt;<span class="hljs-keyword">string</span>, <span class="hljs-keyword">object</span>&gt; dt = <span class="hljs-keyword">new</span> Dictionary&lt;<span class="hljs-keyword">string</span>, <span class="hljs-keyword">object</span>&gt;();</span><br><span class="line">                <span class="hljs-keyword">foreach</span> (<span class="hljs-keyword">var</span> cn <span class="hljs-keyword">in</span> colums)</span><br><span class="line">                &#123;</span><br><span class="line">                    dt.Add(cn, reader[cn]);</span><br><span class="line">                &#125;</span><br><span class="line">                result.Add(dt);</span><br><span class="line">            &#125;</span><br><span class="line">            reader.Dispose();</span><br><span class="line">            cmd.Dispose();</span><br><span class="line">            conn.Close();</span><br><span class="line">            <span class="hljs-keyword">return</span> result;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="hljs-comment"><span class="hljs-doctag">///</span> <span class="hljs-doctag">&lt;summary&gt;</span></span></span><br><span class="line">        <span class="hljs-comment"><span class="hljs-doctag">///</span> 从数据表中获取指定数据</span></span><br><span class="line">        <span class="hljs-comment"><span class="hljs-doctag">///</span> <span class="hljs-doctag">&lt;/summary&gt;</span></span></span><br><span class="line">        <span class="hljs-comment"><span class="hljs-doctag">///</span> <span class="hljs-doctag">&lt;param name="limit"&gt;</span>查找条件<span class="hljs-doctag">&lt;/param&gt;</span></span></span><br><span class="line">        <span class="hljs-comment"><span class="hljs-doctag">///</span> <span class="hljs-doctag">&lt;returns&gt;</span><span class="hljs-doctag">&lt;/returns&gt;</span></span></span><br><span class="line">        <span class="hljs-keyword">public</span> List&lt;Dictionary&lt;<span class="hljs-keyword">string</span>, <span class="hljs-keyword">object</span>&gt;&gt; Select(Dictionary&lt;<span class="hljs-keyword">string</span>, <span class="hljs-keyword">object</span>&gt; limit)</span><br><span class="line">        &#123;</span><br><span class="line">            List&lt;Dictionary&lt;<span class="hljs-keyword">string</span>, <span class="hljs-keyword">object</span>&gt;&gt; result = <span class="hljs-keyword">new</span> List&lt;Dictionary&lt;<span class="hljs-keyword">string</span>, <span class="hljs-keyword">object</span>&gt;&gt;();</span><br><span class="line">            <span class="hljs-keyword">var</span> conn = DataBase.GetConnection();</span><br><span class="line">            conn.Open();</span><br><span class="line">            <span class="hljs-keyword">var</span> restric = <span class="hljs-keyword">new</span> <span class="hljs-keyword">string</span>[<span class="hljs-number">4</span>];</span><br><span class="line">            restric[<span class="hljs-number">2</span>] = TableName;</span><br><span class="line">            <span class="hljs-keyword">var</span> table = conn.GetSchema(<span class="hljs-string">"Columns"</span>, restric);</span><br><span class="line">            List&lt;<span class="hljs-keyword">string</span>&gt; colums = <span class="hljs-keyword">new</span> List&lt;<span class="hljs-keyword">string</span>&gt;();</span><br><span class="line">            <span class="hljs-keyword">foreach</span> (DataRow r <span class="hljs-keyword">in</span> table.Rows)</span><br><span class="line">            &#123;</span><br><span class="line">                colums.Add(r[<span class="hljs-string">"column_name"</span>].ToString());</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="hljs-keyword">var</span> udstr = <span class="hljs-keyword">string</span>.Format(<span class="hljs-string">"select * from &#123;0&#125; where"</span>, TableName);</span><br><span class="line">            StringBuilder sb = <span class="hljs-keyword">new</span> StringBuilder(udstr);</span><br><span class="line">            <span class="hljs-keyword">foreach</span> (<span class="hljs-keyword">var</span> kv <span class="hljs-keyword">in</span> limit)</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="hljs-keyword">var</span> key = kv.Key;</span><br><span class="line">                <span class="hljs-keyword">if</span> ((!<span class="hljs-string">"&lt;&gt;="</span>.Contains(key.TrimEnd(<span class="hljs-string">' '</span>).Last())) &amp;&amp; (!key.ToUpper().Contains(<span class="hljs-string">" LIKE"</span>))) key += <span class="hljs-string">'='</span>;</span><br><span class="line">                sb.AppendFormat(<span class="hljs-string">" &#123;0&#125;'&#123;1&#125;' and"</span>, key, kv.Value);</span><br><span class="line">            &#125;</span><br><span class="line">            sb.Remove(sb.Length - <span class="hljs-number">3</span>, <span class="hljs-number">3</span>);</span><br><span class="line">            udstr = sb.ToString();</span><br><span class="line">            MySqlCommand cmd = <span class="hljs-keyword">new</span> MySqlCommand(udstr, conn);</span><br><span class="line">            MySqlDataReader reader = cmd.ExecuteReader();</span><br><span class="line">            <span class="hljs-keyword">while</span> (reader.Read())</span><br><span class="line">            &#123;</span><br><span class="line">                Dictionary&lt;<span class="hljs-keyword">string</span>, <span class="hljs-keyword">object</span>&gt; dt = <span class="hljs-keyword">new</span> Dictionary&lt;<span class="hljs-keyword">string</span>, <span class="hljs-keyword">object</span>&gt;();</span><br><span class="line">                <span class="hljs-keyword">foreach</span> (<span class="hljs-keyword">var</span> cn <span class="hljs-keyword">in</span> colums)</span><br><span class="line">                &#123;</span><br><span class="line">                    dt.Add(cn, reader[cn]);</span><br><span class="line">                &#125;</span><br><span class="line">                result.Add(dt);</span><br><span class="line">            &#125;</span><br><span class="line">            reader.Dispose();</span><br><span class="line">            <span class="hljs-keyword">return</span> result;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="hljs-comment"><span class="hljs-doctag">///</span> <span class="hljs-doctag">&lt;summary&gt;</span></span></span><br><span class="line">        <span class="hljs-comment"><span class="hljs-doctag">///</span> 将数据插入到数据表</span></span><br><span class="line">        <span class="hljs-comment"><span class="hljs-doctag">///</span> <span class="hljs-doctag">&lt;/summary&gt;</span></span></span><br><span class="line">        <span class="hljs-comment"><span class="hljs-doctag">///</span> <span class="hljs-doctag">&lt;param name="data"&gt;</span>要插入的数据<span class="hljs-doctag">&lt;/param&gt;</span></span></span><br><span class="line">        <span class="hljs-comment"><span class="hljs-doctag">///</span> <span class="hljs-doctag">&lt;returns&gt;</span><span class="hljs-doctag">&lt;/returns&gt;</span></span></span><br><span class="line">        <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">bool</span> <span class="hljs-title">Insert</span>(<span class="hljs-params">Dictionary&lt;<span class="hljs-keyword">string</span>, <span class="hljs-keyword">object</span>&gt; data</span>)</span></span><br><span class="line"><span class="hljs-function"></span>        &#123;</span><br><span class="line">            <span class="hljs-keyword">return</span> InsertGetID(data) == <span class="hljs-number">-1</span> ? <span class="hljs-literal">false</span> : <span class="hljs-literal">true</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="hljs-comment"><span class="hljs-doctag">///</span> <span class="hljs-doctag">&lt;summary&gt;</span></span></span><br><span class="line">        <span class="hljs-comment"><span class="hljs-doctag">///</span> 将数据插入到数据表，并得到当前自增数</span></span><br><span class="line">        <span class="hljs-comment"><span class="hljs-doctag">///</span> <span class="hljs-doctag">&lt;/summary&gt;</span></span></span><br><span class="line">        <span class="hljs-comment"><span class="hljs-doctag">///</span> <span class="hljs-doctag">&lt;param name="data"&gt;</span>要插入的数据<span class="hljs-doctag">&lt;/param&gt;</span></span></span><br><span class="line">        <span class="hljs-comment"><span class="hljs-doctag">///</span> <span class="hljs-doctag">&lt;returns&gt;</span><span class="hljs-doctag">&lt;/returns&gt;</span></span></span><br><span class="line">        <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">long</span> <span class="hljs-title">InsertGetID</span>(<span class="hljs-params">Dictionary&lt;<span class="hljs-keyword">string</span>, <span class="hljs-keyword">object</span>&gt; data</span>)</span></span><br><span class="line"><span class="hljs-function"></span>        &#123;</span><br><span class="line">            <span class="hljs-keyword">var</span> connection = DataBase.GetConnection();</span><br><span class="line">            connection.Open();</span><br><span class="line">            StringBuilder sb = <span class="hljs-keyword">new</span> StringBuilder();</span><br><span class="line">            sb.Append(<span class="hljs-string">"insert into "</span>);</span><br><span class="line">            sb.Append(TableName + <span class="hljs-string">" set "</span>);</span><br><span class="line">            <span class="hljs-keyword">foreach</span> (<span class="hljs-keyword">var</span> c <span class="hljs-keyword">in</span> data)</span><br><span class="line">            &#123;</span><br><span class="line">                sb.Append(c.Key + <span class="hljs-string">"="</span>);</span><br><span class="line">                sb.Append(<span class="hljs-string">"'"</span> + c.Value + <span class="hljs-string">"' ,"</span>);</span><br><span class="line">            &#125;</span><br><span class="line">            sb.Remove(sb.Length - <span class="hljs-number">1</span>, <span class="hljs-number">1</span>);</span><br><span class="line">            MySqlCommand cmd = <span class="hljs-keyword">new</span> MySqlCommand(sb.ToString(), connection);</span><br><span class="line">            cmd.ExecuteNonQuery();</span><br><span class="line">            <span class="hljs-keyword">long</span> result = cmd.LastInsertedId;</span><br><span class="line">            cmd.Dispose();</span><br><span class="line">            connection.Close();</span><br><span class="line">            <span class="hljs-keyword">return</span> result;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="hljs-comment"><span class="hljs-doctag">///</span> <span class="hljs-doctag">&lt;summary&gt;</span></span></span><br><span class="line">        <span class="hljs-comment"><span class="hljs-doctag">///</span> 从数据表中删除符合条件的数据</span></span><br><span class="line">        <span class="hljs-comment"><span class="hljs-doctag">///</span> <span class="hljs-doctag">&lt;/summary&gt;</span></span></span><br><span class="line">        <span class="hljs-comment"><span class="hljs-doctag">///</span> <span class="hljs-doctag">&lt;param name="limit"&gt;</span>查找条件<span class="hljs-doctag">&lt;/param&gt;</span></span></span><br><span class="line">        <span class="hljs-comment"><span class="hljs-doctag">///</span> <span class="hljs-doctag">&lt;returns&gt;</span>受影响的数据的数量<span class="hljs-doctag">&lt;/returns&gt;</span></span></span><br><span class="line">        <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">long</span> <span class="hljs-title">Delete</span>(<span class="hljs-params">Dictionary&lt;<span class="hljs-keyword">string</span>, <span class="hljs-keyword">object</span>&gt; limit</span>)</span></span><br><span class="line"><span class="hljs-function"></span>        &#123;</span><br><span class="line">            <span class="hljs-comment">//返回删除的数据条数</span></span><br><span class="line">            <span class="hljs-keyword">var</span> conn = DataBase.GetConnection();</span><br><span class="line">            conn.Open();</span><br><span class="line">            <span class="hljs-keyword">var</span> delstr = <span class="hljs-keyword">string</span>.Format(<span class="hljs-string">"delect from &#123;0&#125; where"</span>, TableName);</span><br><span class="line">            StringBuilder sb = <span class="hljs-keyword">new</span> StringBuilder(delstr);</span><br><span class="line">            <span class="hljs-keyword">foreach</span> (<span class="hljs-keyword">var</span> kv <span class="hljs-keyword">in</span> limit)</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="hljs-keyword">var</span> key = kv.Key;</span><br><span class="line">                <span class="hljs-keyword">if</span> ((!<span class="hljs-string">"&lt;&gt;="</span>.Contains(key.TrimEnd(<span class="hljs-string">' '</span>).Last())) &amp;&amp; (!key.ToUpper().Contains(<span class="hljs-string">" LIKE"</span>))) key += <span class="hljs-string">'='</span>;</span><br><span class="line">                sb.AppendFormat(<span class="hljs-string">" &#123;0&#125;'&#123;1&#125;' and"</span>, key, kv.Value);</span><br><span class="line">            &#125;</span><br><span class="line">            sb.Remove(sb.Length - <span class="hljs-number">3</span>, <span class="hljs-number">3</span>);</span><br><span class="line">            delstr = sb.ToString();</span><br><span class="line">            MySqlCommand cmd = <span class="hljs-keyword">new</span> MySqlCommand(delstr, conn);</span><br><span class="line">            <span class="hljs-keyword">long</span> result = cmd.ExecuteNonQuery();</span><br><span class="line">            cmd.Dispose();</span><br><span class="line">            conn.Close();</span><br><span class="line">            <span class="hljs-keyword">return</span> result;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="hljs-comment"><span class="hljs-doctag">///</span> <span class="hljs-doctag">&lt;summary&gt;</span></span></span><br><span class="line">        <span class="hljs-comment"><span class="hljs-doctag">///</span> 从数据表中删除符合条件的数据</span></span><br><span class="line">        <span class="hljs-comment"><span class="hljs-doctag">///</span> <span class="hljs-doctag">&lt;/summary&gt;</span></span></span><br><span class="line">        <span class="hljs-comment"><span class="hljs-doctag">///</span> <span class="hljs-doctag">&lt;param name="key"&gt;</span>查找键<span class="hljs-doctag">&lt;/param&gt;</span></span></span><br><span class="line">        <span class="hljs-comment"><span class="hljs-doctag">///</span> <span class="hljs-doctag">&lt;param name="value"&gt;</span>查找值<span class="hljs-doctag">&lt;/param&gt;</span></span></span><br><span class="line">        <span class="hljs-comment"><span class="hljs-doctag">///</span> <span class="hljs-doctag">&lt;returns&gt;</span>受影响的数据的数量<span class="hljs-doctag">&lt;/returns&gt;</span></span></span><br><span class="line">        <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">int</span> <span class="hljs-title">Delete</span>(<span class="hljs-params"><span class="hljs-keyword">string</span> key, <span class="hljs-keyword">string</span> <span class="hljs-keyword">value</span></span>)</span></span><br><span class="line"><span class="hljs-function"></span>        &#123;</span><br><span class="line">            <span class="hljs-comment">//返回删除的数据条数</span></span><br><span class="line">            <span class="hljs-keyword">var</span> conn = DataBase.GetConnection();</span><br><span class="line">            conn.Open();</span><br><span class="line">            <span class="hljs-keyword">var</span> findstr = <span class="hljs-keyword">string</span>.Format(<span class="hljs-string">"delete from &#123;0&#125; where &#123;1&#125;='&#123;2&#125;'"</span>, TableName, key, <span class="hljs-keyword">value</span>);</span><br><span class="line">            MySqlCommand cmd = <span class="hljs-keyword">new</span> MySqlCommand(findstr, conn);</span><br><span class="line">            <span class="hljs-keyword">var</span> result = cmd.ExecuteNonQuery();</span><br><span class="line">            cmd.Dispose();</span><br><span class="line">            conn.Close();</span><br><span class="line">            <span class="hljs-keyword">return</span> result;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="hljs-comment"><span class="hljs-doctag">///</span> <span class="hljs-doctag">&lt;summary&gt;</span></span></span><br><span class="line">        <span class="hljs-comment"><span class="hljs-doctag">///</span> 更新数据表中的数据</span></span><br><span class="line">        <span class="hljs-comment"><span class="hljs-doctag">///</span> <span class="hljs-doctag">&lt;/summary&gt;</span></span></span><br><span class="line">        <span class="hljs-comment"><span class="hljs-doctag">///</span> <span class="hljs-doctag">&lt;param name="key"&gt;</span>查找键<span class="hljs-doctag">&lt;/param&gt;</span></span></span><br><span class="line">        <span class="hljs-comment"><span class="hljs-doctag">///</span> <span class="hljs-doctag">&lt;param name="value"&gt;</span>查找值<span class="hljs-doctag">&lt;/param&gt;</span></span></span><br><span class="line">        <span class="hljs-comment"><span class="hljs-doctag">///</span> <span class="hljs-doctag">&lt;param name="newdata"&gt;</span>新数据<span class="hljs-doctag">&lt;/param&gt;</span></span></span><br><span class="line">        <span class="hljs-comment"><span class="hljs-doctag">///</span> <span class="hljs-doctag">&lt;returns&gt;</span>受影响的数据数量<span class="hljs-doctag">&lt;/returns&gt;</span></span></span><br><span class="line">        <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">long</span> <span class="hljs-title">Update</span>(<span class="hljs-params"><span class="hljs-keyword">string</span> key, <span class="hljs-keyword">string</span> <span class="hljs-keyword">value</span>, Dictionary&lt;<span class="hljs-keyword">string</span>, <span class="hljs-keyword">object</span>&gt; newdata</span>)</span></span><br><span class="line"><span class="hljs-function"></span>        &#123;</span><br><span class="line">            <span class="hljs-keyword">string</span> udstr = <span class="hljs-keyword">string</span>.Format(<span class="hljs-string">"update &#123;0&#125; set "</span>, TableName);</span><br><span class="line">            StringBuilder sb = <span class="hljs-keyword">new</span> StringBuilder(udstr);</span><br><span class="line">            <span class="hljs-keyword">foreach</span> (<span class="hljs-keyword">var</span> u <span class="hljs-keyword">in</span> newdata)</span><br><span class="line">            &#123;</span><br><span class="line">                sb.AppendFormat(<span class="hljs-string">"&#123;0&#125; = '&#123;1&#125;',"</span>, u.Key, u.Value);</span><br><span class="line">            &#125;</span><br><span class="line">            sb.Remove(sb.Length - <span class="hljs-number">1</span>, <span class="hljs-number">1</span>);</span><br><span class="line">            sb.AppendFormat(<span class="hljs-string">" where &#123;0&#125; = '&#123;1&#125;'"</span>, key, <span class="hljs-keyword">value</span>);</span><br><span class="line">            udstr = sb.ToString();</span><br><span class="line">            <span class="hljs-keyword">var</span> conn = DataBase.GetConnection();</span><br><span class="line">            conn.Open();</span><br><span class="line">            MySqlCommand cmd = <span class="hljs-keyword">new</span> MySqlCommand(udstr, conn);</span><br><span class="line">            <span class="hljs-keyword">long</span> result = cmd.ExecuteNonQuery();</span><br><span class="line">            cmd.Dispose();</span><br><span class="line">            conn.Close();</span><br><span class="line">            <span class="hljs-keyword">return</span> result;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="hljs-comment"><span class="hljs-doctag">///</span> <span class="hljs-doctag">&lt;summary&gt;</span></span></span><br><span class="line">        <span class="hljs-comment"><span class="hljs-doctag">///</span> 更新数据表中的数据</span></span><br><span class="line">        <span class="hljs-comment"><span class="hljs-doctag">///</span> <span class="hljs-doctag">&lt;/summary&gt;</span></span></span><br><span class="line">        <span class="hljs-comment"><span class="hljs-doctag">///</span> <span class="hljs-doctag">&lt;param name="limit"&gt;</span>查找条件<span class="hljs-doctag">&lt;/param&gt;</span></span></span><br><span class="line">        <span class="hljs-comment"><span class="hljs-doctag">///</span> <span class="hljs-doctag">&lt;param name="newdata"&gt;</span>新数据<span class="hljs-doctag">&lt;/param&gt;</span></span></span><br><span class="line">        <span class="hljs-comment"><span class="hljs-doctag">///</span> <span class="hljs-doctag">&lt;returns&gt;</span>受影响的数据的数量<span class="hljs-doctag">&lt;/returns&gt;</span></span></span><br><span class="line">        <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">long</span> <span class="hljs-title">Update</span>(<span class="hljs-params">Dictionary&lt;<span class="hljs-keyword">string</span>, <span class="hljs-keyword">object</span>&gt; limit, Dictionary&lt;<span class="hljs-keyword">string</span>, <span class="hljs-keyword">object</span>&gt; newdata</span>)</span></span><br><span class="line"><span class="hljs-function"></span>        &#123;</span><br><span class="line">            <span class="hljs-keyword">string</span> udstr = <span class="hljs-keyword">string</span>.Format(<span class="hljs-string">"update &#123;0&#125; set "</span>, TableName);</span><br><span class="line">            StringBuilder sb = <span class="hljs-keyword">new</span> StringBuilder(udstr);</span><br><span class="line">            <span class="hljs-keyword">foreach</span> (<span class="hljs-keyword">var</span> u <span class="hljs-keyword">in</span> newdata)</span><br><span class="line">            &#123;</span><br><span class="line">                sb.AppendFormat(<span class="hljs-string">"&#123;0&#125; = '&#123;1&#125;',"</span>, u.Key, u.Value);</span><br><span class="line">            &#125;</span><br><span class="line">            sb.Remove(sb.Length - <span class="hljs-number">1</span>, <span class="hljs-number">1</span>);</span><br><span class="line">            sb.Append(<span class="hljs-string">" where "</span>);</span><br><span class="line">            <span class="hljs-keyword">foreach</span> (<span class="hljs-keyword">var</span> kv <span class="hljs-keyword">in</span> limit)</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="hljs-keyword">var</span> key = kv.Key;</span><br><span class="line">                <span class="hljs-keyword">if</span> ((!<span class="hljs-string">"&lt;&gt;="</span>.Contains(key.TrimEnd(<span class="hljs-string">' '</span>).Last())) &amp;&amp; (!key.ToUpper().Contains(<span class="hljs-string">" LIKE"</span>))) key += <span class="hljs-string">'='</span>;</span><br><span class="line">                sb.AppendFormat(<span class="hljs-string">" &#123;0&#125;'&#123;1&#125;' and"</span>, key, kv.Value);</span><br><span class="line">            &#125;</span><br><span class="line">            sb.Remove(sb.Length - <span class="hljs-number">3</span>, <span class="hljs-number">3</span>);</span><br><span class="line">            udstr = sb.ToString();</span><br><span class="line">            <span class="hljs-keyword">var</span> conn = DataBase.GetConnection();</span><br><span class="line">            conn.Open();</span><br><span class="line">            MySqlCommand cmd = <span class="hljs-keyword">new</span> MySqlCommand(udstr, conn);</span><br><span class="line">            <span class="hljs-keyword">long</span> result = cmd.ExecuteNonQuery();</span><br><span class="line">            cmd.Dispose();</span><br><span class="line">            conn.Close();</span><br><span class="line">            <span class="hljs-keyword">return</span> result;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure></p>
+<p>在这个类当中包含了对数据库进行增删查改的通用操作。不同的应用所操作的数据表可能不同，因此数据表名定义为可覆写的类型。同时也考虑到，不同的应用操作的都是同一个数据库，因此应该有一个类负责管理数据库的配置和连接。<br><figure class="highlight cs hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">class</span> <span class="hljs-title">DataBase</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="hljs-comment"><span class="hljs-doctag">///</span> <span class="hljs-doctag">&lt;summary&gt;</span></span></span><br><span class="line">        <span class="hljs-comment"><span class="hljs-doctag">///</span> 数据库名</span></span><br><span class="line">        <span class="hljs-comment"><span class="hljs-doctag">///</span> <span class="hljs-doctag">&lt;/summary&gt;</span></span></span><br><span class="line">        <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">string</span> Name &#123; <span class="hljs-keyword">get</span>; <span class="hljs-keyword">set</span>; &#125; = <span class="hljs-string">"test"</span>;</span><br><span class="line">        <span class="hljs-comment"><span class="hljs-doctag">///</span> <span class="hljs-doctag">&lt;summary&gt;</span></span></span><br><span class="line">        <span class="hljs-comment"><span class="hljs-doctag">///</span> 数据库地址</span></span><br><span class="line">        <span class="hljs-comment"><span class="hljs-doctag">///</span> <span class="hljs-doctag">&lt;/summary&gt;</span></span></span><br><span class="line">        <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">string</span> Host &#123; <span class="hljs-keyword">get</span>; <span class="hljs-keyword">set</span>; &#125; = <span class="hljs-string">"127.0.0.1"</span>;</span><br><span class="line">        <span class="hljs-comment"><span class="hljs-doctag">///</span> <span class="hljs-doctag">&lt;summary&gt;</span></span></span><br><span class="line">        <span class="hljs-comment"><span class="hljs-doctag">///</span> 数据库端口</span></span><br><span class="line">        <span class="hljs-comment"><span class="hljs-doctag">///</span> <span class="hljs-doctag">&lt;/summary&gt;</span></span></span><br><span class="line">        <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">int</span> Port &#123; <span class="hljs-keyword">get</span>; <span class="hljs-keyword">set</span>; &#125; = <span class="hljs-number">3306</span>;</span><br><span class="line">        <span class="hljs-comment"><span class="hljs-doctag">///</span> <span class="hljs-doctag">&lt;summary&gt;</span></span></span><br><span class="line">        <span class="hljs-comment"><span class="hljs-doctag">///</span> 用户名</span></span><br><span class="line">        <span class="hljs-comment"><span class="hljs-doctag">///</span> <span class="hljs-doctag">&lt;/summary&gt;</span></span></span><br><span class="line">        <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">string</span> UserName &#123; <span class="hljs-keyword">get</span>; <span class="hljs-keyword">set</span>; &#125; = <span class="hljs-string">"root"</span>;</span><br><span class="line">        <span class="hljs-comment"><span class="hljs-doctag">///</span> <span class="hljs-doctag">&lt;summary&gt;</span></span></span><br><span class="line">        <span class="hljs-comment"><span class="hljs-doctag">///</span> 密码</span></span><br><span class="line">        <span class="hljs-comment"><span class="hljs-doctag">///</span> <span class="hljs-doctag">&lt;/summary&gt;</span></span></span><br><span class="line">        <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">string</span> PassWord &#123; <span class="hljs-keyword">get</span>; <span class="hljs-keyword">set</span>; &#125; = <span class="hljs-string">"root"</span>;</span><br><span class="line"></span><br><span class="line">        <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">string</span> ConnStr &#123; <span class="hljs-keyword">get</span>; <span class="hljs-keyword">set</span>; &#125;</span><br><span class="line"></span><br><span class="line">        <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> MySqlConnection <span class="hljs-title">GetConnection</span>(<span class="hljs-params"></span>)</span></span><br><span class="line"><span class="hljs-function"></span>        &#123;</span><br><span class="line">            <span class="hljs-keyword">if</span> (ConnStr == <span class="hljs-literal">null</span>) <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> Exception(<span class="hljs-string">"数据库未初始化"</span>);</span><br><span class="line">            <span class="hljs-keyword">else</span> <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> MySqlConnection(ConnStr);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">Initialise</span>(<span class="hljs-params"><span class="hljs-keyword">string</span> name, <span class="hljs-keyword">string</span> host, <span class="hljs-keyword">int</span> port, <span class="hljs-keyword">string</span> user, <span class="hljs-keyword">string</span> password</span>)</span></span><br><span class="line"><span class="hljs-function"></span>        &#123;</span><br><span class="line">            ConnStr = <span class="hljs-keyword">string</span>.Format(</span><br><span class="line">                <span class="hljs-string">"Database = &#123;0&#125;; datasource = &#123;1&#125;; port = &#123;2&#125;; user=&#123;3&#125;;pwd=&#123;4&#125;;SslMode = none; charset=utf8;"</span></span><br><span class="line">                , name, host, port, user, password);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">Initialise</span>(<span class="hljs-params"></span>)</span></span><br><span class="line"><span class="hljs-function"></span>        &#123;</span><br><span class="line">            <span class="hljs-keyword">if</span> (Name == <span class="hljs-literal">null</span> || Host == <span class="hljs-literal">null</span> || UserName == <span class="hljs-literal">null</span> || PassWord == <span class="hljs-literal">null</span>) <span class="hljs-keyword">return</span>;</span><br><span class="line">            Initialise(Name, Host, Port, UserName, PassWord);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure></p>
+<p>数据库的连接及配置统一由这个类进行管理，从而避免各应用操作数据库时可能发生的错误和冲突。</p>
+<h2 id="Http消息的封装"><a href="#Http消息的封装" class="headerlink" title="Http消息的封装"></a>Http消息的封装</h2><p>为了方便程序处理，以及架构的清晰，应对Http消息进行封装。<br>首先是Http请求参数：<br><figure class="highlight cs hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">class</span> <span class="hljs-title">HttpArgs</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="hljs-keyword">protected</span> Dictionary&lt;<span class="hljs-keyword">string</span>, <span class="hljs-keyword">string</span>&gt; getArgs;</span><br><span class="line">    <span class="hljs-keyword">protected</span> JObject postArgs_j;</span><br><span class="line">    <span class="hljs-comment"><span class="hljs-doctag">///</span> <span class="hljs-doctag">&lt;summary&gt;</span></span></span><br><span class="line">    <span class="hljs-comment"><span class="hljs-doctag">///</span> 创建HttpArgs消息对象</span></span><br><span class="line">    <span class="hljs-comment"><span class="hljs-doctag">///</span> <span class="hljs-doctag">&lt;/summary&gt;</span></span></span><br><span class="line">    <span class="hljs-comment"><span class="hljs-doctag">///</span> <span class="hljs-doctag">&lt;param name="get_args"&gt;</span><span class="hljs-doctag">&lt;/param&gt;</span></span></span><br><span class="line">    <span class="hljs-comment"><span class="hljs-doctag">///</span> <span class="hljs-doctag">&lt;param name="response"&gt;</span><span class="hljs-doctag">&lt;/param&gt;</span></span></span><br><span class="line">    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">HttpArgs</span>(<span class="hljs-params">Dictionary&lt;<span class="hljs-keyword">string</span>, <span class="hljs-keyword">string</span>&gt; get_args, JObject post_args</span>)</span></span><br><span class="line"><span class="hljs-function"></span>    &#123;</span><br><span class="line">        getArgs = get_args;</span><br><span class="line">        postArgs_j = post_args;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="hljs-comment"><span class="hljs-doctag">///</span> <span class="hljs-doctag">&lt;summary&gt;</span></span></span><br><span class="line">    <span class="hljs-comment"><span class="hljs-doctag">///</span> 获取指定Get参数的值</span></span><br><span class="line">    <span class="hljs-comment"><span class="hljs-doctag">///</span> <span class="hljs-doctag">&lt;/summary&gt;</span></span></span><br><span class="line">    <span class="hljs-comment"><span class="hljs-doctag">///</span> <span class="hljs-doctag">&lt;param name="key"&gt;</span>参数的键<span class="hljs-doctag">&lt;/param&gt;</span></span></span><br><span class="line">    <span class="hljs-comment"><span class="hljs-doctag">///</span> <span class="hljs-doctag">&lt;returns&gt;</span><span class="hljs-doctag">&lt;/returns&gt;</span></span></span><br><span class="line">    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">string</span> <span class="hljs-title">GetArgValue</span>(<span class="hljs-params"><span class="hljs-keyword">string</span> key</span>)</span></span><br><span class="line"><span class="hljs-function"></span>    &#123;</span><br><span class="line">        <span class="hljs-keyword">if</span> (getArgs.ContainsKey(key))</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="hljs-keyword">return</span> getArgs[key];</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="hljs-keyword">else</span></span><br><span class="line">        &#123;</span><br><span class="line">            <span class="hljs-keyword">return</span> <span class="hljs-keyword">string</span>.Empty;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="hljs-comment"><span class="hljs-doctag">///</span> <span class="hljs-doctag">&lt;summary&gt;</span></span></span><br><span class="line">    <span class="hljs-comment"><span class="hljs-doctag">///</span> 获取Post参数</span></span><br><span class="line">    <span class="hljs-comment"><span class="hljs-doctag">///</span> <span class="hljs-doctag">&lt;/summary&gt;</span></span></span><br><span class="line">    <span class="hljs-comment"><span class="hljs-doctag">///</span> <span class="hljs-doctag">&lt;returns&gt;</span><span class="hljs-doctag">&lt;/returns&gt;</span></span></span><br><span class="line">    <span class="hljs-function"><span class="hljs-keyword">public</span> JObject <span class="hljs-title">GetPostValue</span>(<span class="hljs-params"></span>)</span></span><br><span class="line"><span class="hljs-function"></span>    &#123;</span><br><span class="line">        <span class="hljs-keyword">if</span> (postArgs_j == <span class="hljs-literal">null</span>) <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> JObject();</span><br><span class="line">        <span class="hljs-keyword">return</span> postArgs_j;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>对于Get方式传递的参数，使用字典进行存放，并提供GetArgValue方法进行查询；对于Post方式传递的参数，封装为JObject对象(这里借助了Newton.json包)，并提供GetPostValue方法，直接返回JObject对象。<br>接下来是Http相应参数的封装：<br><figure class="highlight cs hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">class</span> <span class="hljs-title">HttpResponseArgs</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="hljs-keyword">public</span> ResponseType ResponseType &#123; <span class="hljs-keyword">get</span>; <span class="hljs-keyword">set</span>; &#125;</span><br><span class="line">        <span class="hljs-keyword">private</span> JObject obj &#123; <span class="hljs-keyword">get</span>; <span class="hljs-keyword">set</span>; &#125;</span><br><span class="line">        <span class="hljs-keyword">private</span> <span class="hljs-keyword">string</span> rawStr &#123; <span class="hljs-keyword">get</span>; <span class="hljs-keyword">set</span>; &#125;</span><br><span class="line">        <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">HttpResponseArgs</span>(<span class="hljs-params">JObject obj, ResponseType type</span>)</span></span><br><span class="line"><span class="hljs-function"></span>        &#123;</span><br><span class="line">            <span class="hljs-keyword">this</span>.obj = obj;</span><br><span class="line">            ResponseType = type;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">HttpResponseArgs</span>(<span class="hljs-params"><span class="hljs-keyword">string</span> msg</span>)</span></span><br><span class="line"><span class="hljs-function"></span>        &#123;</span><br><span class="line">            rawStr = msg;</span><br><span class="line">            ResponseType = ResponseType.Raw;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">override</span> <span class="hljs-keyword">string</span> <span class="hljs-title">ToString</span>(<span class="hljs-params"></span>)</span></span><br><span class="line"><span class="hljs-function"></span>        &#123;</span><br><span class="line">            <span class="hljs-keyword">if</span> (ResponseType == ResponseType.Raw)</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="hljs-keyword">return</span> rawStr;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="hljs-keyword">var</span> jstr = obj.ToString(Newtonsoft.Json.Formatting.Indented);</span><br><span class="line">            <span class="hljs-keyword">switch</span> (ResponseType)</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="hljs-keyword">case</span> ResponseType.Json:</span><br><span class="line">                    <span class="hljs-keyword">return</span> jstr;</span><br><span class="line">                <span class="hljs-keyword">case</span> ResponseType.Xml:</span><br><span class="line">                    <span class="hljs-keyword">return</span> Newtonsoft.Json.JsonConvert.DeserializeXmlNode(jstr).InnerXml;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="hljs-keyword">return</span> jstr;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">enum</span> ResponseType</span><br><span class="line">    &#123;</span><br><span class="line">        Json,</span><br><span class="line">        Xml,</span><br><span class="line">        Raw</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure></p>
+<p>首先是Http相应的类型。作为服务端接口，常用的返回格式是xml格式或者json格式。为了保持可拓展性，也应留出回应任意文本的接口。对于json格式，利用Newton.Json包将数据对象转换为JObject，从而得到json字符串；对于xml格式，先将数据对象转换为JObject，再转换为xml对象，从而得到xml文本。</p>
+<h2 id="按照我们的思路对Http服务器进行封装"><a href="#按照我们的思路对Http服务器进行封装" class="headerlink" title="按照我们的思路对Http服务器进行封装"></a>按照我们的思路对Http服务器进行封装</h2><p>最后，对原始的Http服务器进行封装，以实现我们思路中的架构：<br><figure class="highlight cs hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">class</span> <span class="hljs-title">HttpServer</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="hljs-keyword">private</span> HttpListener httpListener;</span><br><span class="line">        <span class="hljs-comment"><span class="hljs-doctag">///</span> <span class="hljs-doctag">&lt;summary&gt;</span></span></span><br><span class="line">        <span class="hljs-comment"><span class="hljs-doctag">///</span> Http请求传递的参数</span></span><br><span class="line">        <span class="hljs-comment"><span class="hljs-doctag">///</span> <span class="hljs-doctag">&lt;/summary&gt;</span></span></span><br><span class="line">        <span class="hljs-comment"><span class="hljs-doctag">///</span> <span class="hljs-doctag">&lt;param name="args"&gt;</span><span class="hljs-doctag">&lt;/param&gt;</span></span></span><br><span class="line">        <span class="hljs-comment"><span class="hljs-doctag">///</span> <span class="hljs-doctag">&lt;returns&gt;</span>回应参数,无需回应时应返回null<span class="hljs-doctag">&lt;/returns&gt;</span></span></span><br><span class="line">        <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">delegate</span> HttpResponseArgs <span class="hljs-title">HttpGetRequestDelegate</span>(<span class="hljs-params">HttpArgs args</span>)</span>;</span><br><span class="line">        <span class="hljs-keyword">public</span> <span class="hljs-keyword">event</span> HttpGetRequestDelegate HttpGotRequest;</span><br><span class="line">        <span class="hljs-comment"><span class="hljs-doctag">///</span> <span class="hljs-doctag">&lt;summary&gt;</span></span></span><br><span class="line">        <span class="hljs-comment"><span class="hljs-doctag">///</span> 使用指定端口构造Http服务器</span></span><br><span class="line">        <span class="hljs-comment"><span class="hljs-doctag">///</span> <span class="hljs-doctag">&lt;/summary&gt;</span></span></span><br><span class="line">        <span class="hljs-comment"><span class="hljs-doctag">///</span> <span class="hljs-doctag">&lt;param name="port"&gt;</span>监听端口<span class="hljs-doctag">&lt;/param&gt;</span></span></span><br><span class="line">        <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">HttpServer</span>(<span class="hljs-params"><span class="hljs-keyword">int</span> port</span>)</span></span><br><span class="line"><span class="hljs-function"></span>        &#123;</span><br><span class="line">            httpListener = <span class="hljs-keyword">new</span> HttpListener();</span><br><span class="line">            httpListener.Prefixes.Add(<span class="hljs-keyword">string</span>.Format(<span class="hljs-string">"http://+:&#123;0&#125;/"</span>, port));</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="hljs-comment"><span class="hljs-doctag">///</span> <span class="hljs-doctag">&lt;summary&gt;</span></span></span><br><span class="line">        <span class="hljs-comment"><span class="hljs-doctag">///</span> 启动Http服务器</span></span><br><span class="line">        <span class="hljs-comment"><span class="hljs-doctag">///</span> <span class="hljs-doctag">&lt;/summary&gt;</span></span></span><br><span class="line">        <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">Start</span>(<span class="hljs-params"></span>)</span></span><br><span class="line"><span class="hljs-function"></span>        &#123;</span><br><span class="line">            httpListener.Start();</span><br><span class="line">            httpListener.BeginGetContext(<span class="hljs-keyword">new</span> AsyncCallback(GetContext), httpListener);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="hljs-function"><span class="hljs-keyword">private</span> <span class="hljs-keyword">void</span> <span class="hljs-title">GetContext</span>(<span class="hljs-params">IAsyncResult ar</span>)</span></span><br><span class="line"><span class="hljs-function"></span>        &#123;</span><br><span class="line"></span><br><span class="line">            HttpListener httpListener = ar.AsyncState <span class="hljs-keyword">as</span> HttpListener;</span><br><span class="line">            HttpListenerContext context = httpListener.EndGetContext(ar);</span><br><span class="line">            httpListener.BeginGetContext(<span class="hljs-keyword">new</span> AsyncCallback(GetContext), httpListener);</span><br><span class="line">            HttpListenerRequest request = context.Request;</span><br><span class="line">            HttpListenerResponse response = context.Response;</span><br><span class="line">            Dictionary&lt;<span class="hljs-keyword">string</span>, <span class="hljs-keyword">string</span>&gt; getArgs = <span class="hljs-keyword">new</span> Dictionary&lt;<span class="hljs-keyword">string</span>, <span class="hljs-keyword">string</span>&gt;();</span><br><span class="line">            JObject postArgs = <span class="hljs-literal">null</span>;</span><br><span class="line">            <span class="hljs-keyword">string</span>[] keys = request.QueryString.AllKeys;</span><br><span class="line">            <span class="hljs-keyword">if</span> (keys.Count() &gt; <span class="hljs-number">0</span>)</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="hljs-keyword">foreach</span> (<span class="hljs-keyword">var</span> key <span class="hljs-keyword">in</span> keys)</span><br><span class="line">                &#123;</span><br><span class="line">                    getArgs.Add(key, request.QueryString[key]);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="hljs-keyword">if</span> (request.HttpMethod == <span class="hljs-string">"POST"</span>)</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="hljs-keyword">using</span> (Stream stream = request.InputStream)</span><br><span class="line">                &#123;</span><br><span class="line">                    StreamReader reader = <span class="hljs-keyword">new</span> StreamReader(stream, Encoding.UTF8);</span><br><span class="line">                    <span class="hljs-keyword">string</span> body = reader.ReadToEnd();</span><br><span class="line">                    <span class="hljs-keyword">string</span> jsonText = <span class="hljs-string">"&#123;&#125;"</span>;</span><br><span class="line">                    <span class="hljs-keyword">if</span> (body.IndexOf(<span class="hljs-string">"&lt;xml&gt;"</span>) == <span class="hljs-number">0</span>)</span><br><span class="line">                    &#123;</span><br><span class="line">                        XmlDocument doc = <span class="hljs-keyword">new</span> XmlDocument();</span><br><span class="line">                        doc.LoadXml(body);</span><br><span class="line">                        jsonText = JsonConvert.SerializeXmlNode(doc, Newtonsoft.Json.Formatting.None, <span class="hljs-literal">true</span>);</span><br><span class="line">                    &#125;</span><br><span class="line">                    <span class="hljs-keyword">if</span> (body.IndexOf(<span class="hljs-string">"&#123;"</span>) == <span class="hljs-number">0</span>)</span><br><span class="line">                    &#123;</span><br><span class="line">                        jsonText = body;</span><br><span class="line">                    &#125;</span><br><span class="line">                    postArgs = JObject.Parse(jsonText);</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="hljs-keyword">var</span> callbackValue = HttpGotRequest?.Invoke(<span class="hljs-keyword">new</span> HttpArgs(getArgs, postArgs));</span><br><span class="line">            <span class="hljs-meta">#<span class="hljs-meta-keyword">region</span> 消息回应</span></span><br><span class="line">            <span class="hljs-keyword">if</span> (callbackValue == <span class="hljs-literal">null</span>) <span class="hljs-keyword">return</span>;</span><br><span class="line">            response.ContentType = <span class="hljs-string">"json"</span>;</span><br><span class="line">            response.ContentEncoding = Encoding.UTF8;</span><br><span class="line">            <span class="hljs-keyword">using</span> (Stream output = response.OutputStream)</span><br><span class="line">            &#123;</span><br><span class="line">                <span class="hljs-keyword">byte</span>[] buffer = Encoding.UTF8.GetBytes(callbackValue.ToString());</span><br><span class="line">                output.Write(buffer, <span class="hljs-number">0</span>, buffer.Length);</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="hljs-meta">#<span class="hljs-meta-keyword">endregion</span></span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure></p>
+<p>利用HttpClient在指定的域和端口监听Http请求。GetContext是Http请求的处理方法，它是一个异步方法，因此不会造成程序的阻塞，从而可以处理较高并发的请求。在处理Http请求时，首先对请求链接中的QueryString进行处理，获取到Get方式传递的参数，构造字典。然后读取Post流，判断Post的数据是xml格式还是json格式，然后进行相应的处理，构造JObject对象。利用字典和JObject对象即可构造Http请求参数，以事件参数的形式传递给监听者，待监听者进行处理后，拿到监听者返回的Http响应对象，以网络流的方式进行Http响应。<br>而上文所说的监听者要做的事情很简单，只需要将请求参数传递给Application类，Application类就会根据参数进行下发、处理，并返回响应参数。拿到这个响应参数后再返回给HttpServer就好了。<br><figure class="highlight cs hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">class</span> <span class="hljs-title">Program</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> HttpServer Server;</span><br><span class="line">        <span class="hljs-function"><span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">Main</span>(<span class="hljs-params"><span class="hljs-keyword">string</span>[] args</span>)</span></span><br><span class="line"><span class="hljs-function"></span>        &#123;</span><br><span class="line">            Server = <span class="hljs-keyword">new</span> HttpServer(<span class="hljs-number">80</span>);</span><br><span class="line">            Server.HttpGotRequest += Server_HttpGotRequest;</span><br><span class="line">            Server.Start();</span><br><span class="line">            Console.WriteLine(<span class="hljs-string">"服务启动成功."</span>);</span><br><span class="line">            <span class="hljs-keyword">while</span>(<span class="hljs-literal">true</span>) ;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="hljs-function"><span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> HttpResponseArgs <span class="hljs-title">Server_HttpGotRequest</span>(<span class="hljs-params">HttpArgs args</span>)</span></span><br><span class="line"><span class="hljs-function"></span>        &#123;</span><br><span class="line">            <span class="hljs-keyword">return</span> Application.Application.Handle(args);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure></p>
+<p>这样，一个微型Http服务框架就写好了。</p>
+<h2 id="添加一个应用"><a href="#添加一个应用" class="headerlink" title="添加一个应用"></a>添加一个应用</h2><p>接下来将演示如何利用我们刚写好的这个服务框架搭建一个最简单的Http服务<br>首先新建一个类，名字可以叫作Index。在我们的框架中，所有的应用都应实现IApplication接口，所有应用的数据都继承BaseModel类，它也不例外:<br><figure class="highlight cs hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">class</span> <span class="hljs-title">Index</span> : <span class="hljs-title">IApplication</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="hljs-keyword">public</span> <span class="hljs-keyword">string</span> Name =&gt; <span class="hljs-string">""</span>;</span><br><span class="line"></span><br><span class="line">        <span class="hljs-function"><span class="hljs-keyword">public</span> HttpResponseArgs <span class="hljs-title">Handle</span>(<span class="hljs-params">HttpArgs args</span>)</span></span><br><span class="line"><span class="hljs-function"></span>        &#123;</span><br><span class="line">            <span class="hljs-keyword">var</span> msg = <span class="hljs-keyword">new</span> IndexModel</span><br><span class="line">            &#123;</span><br><span class="line">                Code = <span class="hljs-number">200</span>,</span><br><span class="line">                Message = <span class="hljs-string">"Welcome to use ThinkNet frame!"</span>,</span><br><span class="line">                Data = DateTime.Now.ToString(<span class="hljs-string">"yyyy-MM-dd HH:mm:ss"</span>)</span><br><span class="line">            &#125;;</span><br><span class="line">            <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> HttpResponseArgs(JObject.FromObject(msg), ResponseType.Json);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">class</span> <span class="hljs-title">IndexModel</span> : <span class="hljs-title">BaseModel</span></span><br><span class="line">    &#123;</span><br><span class="line">        <span class="hljs-keyword">public</span> <span class="hljs-keyword">int</span> Code &#123; <span class="hljs-keyword">get</span>; <span class="hljs-keyword">set</span>; &#125;</span><br><span class="line">        <span class="hljs-keyword">public</span> <span class="hljs-keyword">string</span> Message &#123; <span class="hljs-keyword">get</span>; <span class="hljs-keyword">set</span>; &#125;</span><br><span class="line">        <span class="hljs-keyword">public</span> <span class="hljs-keyword">string</span> Data &#123; <span class="hljs-keyword">get</span>; <span class="hljs-keyword">set</span>; &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure></p>
+<p>应用的名字设置成空字符串，说明这是默认的app，当找不到合适的app进行处理时就由这个app来进行处理。在Handle方法中，我们没有用到请求参数，只是简单地返回了一个状态码、一条消息以及当前时间。这个数据结构被定义在IndexModel这个类中。由于并不需要进行数据库操作，因此无需对数据表字段进行重写。<br>建立这两个类之后，就完成了一个最简单的app的定义。接下来只需要激活这个app即可。在Main方法中添加一行:<br><figure class="highlight cs hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Application.Application.LoadApp(<span class="hljs-keyword">typeof</span>(Application.Index.Index));</span><br></pre></td></tr></table></figure></p>
+<p>完整的Main方法：<br><figure class="highlight cs hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function"><span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">Main</span>(<span class="hljs-params"><span class="hljs-keyword">string</span>[] args</span>)</span></span><br><span class="line"><span class="hljs-function"></span>&#123;</span><br><span class="line">    Server = <span class="hljs-keyword">new</span> HttpServer(<span class="hljs-number">80</span>);</span><br><span class="line">    Application.Application.LoadApp(<span class="hljs-keyword">typeof</span>(Application.Index.Index));</span><br><span class="line">    Server.HttpGotRequest += Server_HttpGotRequest;</span><br><span class="line">    Server.Start();</span><br><span class="line">    Console.WriteLine(<span class="hljs-string">"服务启动成功."</span>);</span><br><span class="line">    <span class="hljs-keyword">while</span>(<span class="hljs-literal">true</span>) ;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>此时即可按下F5，运行服务器。运行开服务器之后打开浏览器，地址栏输入127.0.0.1，回车，应该能够看到类似下面的页面：<br><img src="data:image/png;base64,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" alt="img"><br>如果将app的Name进行修改，比如将Name改成index:<br><figure class="highlight cs hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">public</span> <span class="hljs-keyword">string</span> Name =&gt; <span class="hljs-string">"index"</span>;</span><br></pre></td></tr></table></figure></p>
+<p>那么访问的链接中应带上app的名字，指定访问名为index的app：127.0.0.1?app=index<br>访问的效果是一样的:<br><img src="data:image/png;base64,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" alt="img2"><br>那么，再添加多个app，进行不同的处理，道理都是一样的。有了这套框架，我们就可以很容易地搭建Http服务，而无需考虑底层Http服务器的运作，方便快捷，而且架构整洁。</p>
+<h2 id="在Linux系统中运行"><a href="#在Linux系统中运行" class="headerlink" title="在Linux系统中运行"></a>在Linux系统中运行</h2><p>前面已经介绍过，.Net Core是跨平台的，我们以 .Net Core为基础编写的程序当然也是跨平台的。生成面向Linux系统的发布版，我们的代码就可以在Linux系统中运行。<br>在解决方案根目录打开命令提示符，输入以下命令：<br><figure class="highlight powershell hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">dotnet publish -c Release -r linux-x64</span><br></pre></td></tr></table></figure></p>
+<p>等待生成完成后，在/bin/Release目录下即可找到生成的结果。将publish文件夹复制到Linux系统中，直接输入./项目名称，程序即可在Linux系统中正常运行。访问上文中的地址，结果也是完全一样的。<br>本文可能存在各种错误与疏漏，请读者包涵指正。</p>
+
+        </div>
+        
+        <div class="level is-size-7 is-uppercase">
+            <div class="level-start">
+                <div class="level-item">
+                    <span class="is-size-6 has-text-grey has-mr-7">#</span>
+                    <a class="has-link-grey -link" href="/tags/网络编程/">网络编程</a>
+                </div>
+            </div>
+        </div>
+        
+        
+        
+    </div>
+</div>
+
+
+
+<div class="card">
+    <div class="card-content">
+        <h3 class="menu-label has-text-centered">喜欢这篇文章？打赏一下作者吧</h3>
+        <div class="buttons is-centered">
+            
+                
+<div class="notification is-danger">
+    You forgot to set the <code>qrcode</code> for Alipay. Please set it in <code>_config.yml</code>.
+</div>
+
+                
+                
+<div class="notification is-danger">
+    You forgot to set the <code>qrcode</code> for Wechat. Please set it in <code>_config.yml</code>.
+</div>
+
+                
+                <!-- Visit https://www.paypal.com/donate/buttons/ to get your donate button -->
+
+<div class="notification is-danger">
+    You forgot to set the <code>business</code> and <code>currency_code</code> for Paypal. Please set it in <code>_config.yml</code>.
+</div>
+
+                
+                
+<div class="notification is-danger">
+    You forgot to set the <code>url</code> Patreon. Please set it in <code>_config.yml</code>.
+</div>
+
+                
+        </div>
+    </div>
+</div>
+
+
+
+<div class="card card-transparent">
+    <div class="level post-navigation is-flex-wrap is-mobile">
+        
+        
+        <div class="level-end">
+            <a class="level level-item has-link-grey  article-nav-next" href="/2019/07/14/hexo-2/">
+                <span class="level-item">更换电脑或重装系统前后对原hexo博客的处理</span>
+                <i class="level-item fas fa-chevron-right"></i>
+            </a>
+        </div>
+        
+    </div>
+</div>
+
+
+</div>
+                
+
+
+
+
+<div class="column is-4-tablet is-4-desktop is-3-widescreen  has-order-1 column-left ">
+    
+        
+<div class="card widget">
+    <div class="card-content">
+        <nav class="level">
+            <div class="level-item has-text-centered" style="flex-shrink: 1">
+                <div>
+                    
+                        <img class="image is-128x128 has-mb-6" src="/images/avatar.png" alt="电子科技协会">
+                    
+                    
+                    <p class="is-size-4 is-block">
+                        电子科技协会
+                    </p>
+                    
+                    
+                    <p class="is-size-6 is-block">
+                        强迫自己优秀，然后骄傲地生活！
+                    </p>
+                    
+                    
+                    <p class="is-size-6 is-flex is-flex-center has-text-grey">
+                        <i class="fas fa-map-marker-alt has-mr-7"></i>
+                        <span>湖北 武汉</span>
+                    </p>
+                    
+                </div>
+            </div>
+        </nav>
+        <nav class="level is-mobile">
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        文章
+                    </p>
+                    <p class="title has-text-weight-normal">
+                        11
+                    </p>
+                </div>
+            </div>
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        分类
+                    </p>
+                    <p class="title has-text-weight-normal">
+                        2
+                    </p>
+                </div>
+            </div>
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        标签
+                    </p>
+                    <p class="title has-text-weight-normal">
+                        5
+                    </p>
+                </div>
+            </div>
+        </nav>
+        <div class="level">
+            <a class="level-item button is-link is-rounded" href="https://github.com/whut-electronic" target="_blank">
+                关注我</a>
+        </div>
+        
+        
+        <div class="level is-mobile">
+            
+            <a class="level-item button is-white is-marginless" target="_blank"
+                title="Github" href="https://github.com/ppoffice">
+                
+                <i class="fab fa-github"></i>
+                
+            </a>
+            
+            <a class="level-item button is-white is-marginless" target="_blank"
+                title="Facebook" href="https://facebook.com">
+                
+                <i class="fab fa-facebook"></i>
+                
+            </a>
+            
+            <a class="level-item button is-white is-marginless" target="_blank"
+                title="Twitter" href="https://twitter.com">
+                
+                <i class="fab fa-twitter"></i>
+                
+            </a>
+            
+            <a class="level-item button is-white is-marginless" target="_blank"
+                title="Dribbble" href="https://dribbble.com">
+                
+                <i class="fab fa-dribbble"></i>
+                
+            </a>
+            
+            <a class="level-item button is-white is-marginless" target="_blank"
+                title="RSS" href="/">
+                
+                <i class="fas fa-rss"></i>
+                
+            </a>
+            
+        </div>
+        
+    </div>
+</div>
+    
+        
+    
+        
+
+<div class="card widget">
+    <div class="card-content">
+        <div class="menu">
+        <h3 class="menu-label">
+            链接
+        </h3>
+        <ul class="menu-list">
+        
+            <li>
+                <a class="level is-mobile" href="https://hexo.io" target="_blank">
+                    <span class="level-left">
+                        <span class="level-item">Hexo</span>
+                    </span>
+                    <span class="level-right">
+                        <span class="level-item tag">hexo.io</span>
+                    </span>
+                </a>
+            </li>
+        
+            <li>
+                <a class="level is-mobile" href="https://github.com/ppoffice" target="_blank">
+                    <span class="level-left">
+                        <span class="level-item">PPOffice</span>
+                    </span>
+                    <span class="level-right">
+                        <span class="level-item tag">github.com</span>
+                    </span>
+                </a>
+            </li>
+        
+        </ul>
+        </div>
+    </div>
+</div>
+
+
+    
+        
+<div class="card widget">
+    <div class="card-content">
+        <div class="menu">
+            <h3 class="menu-label">
+                分类
+            </h3>
+            <ul class="menu-list">
+            <li>
+        <a class="level is-marginless" href="/categories/hexo/">
+            <span class="level-start">
+                <span class="level-item">hexo</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">3</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/linux运维/">
+            <span class="level-start">
+                <span class="level-item">linux运维</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">2</span>
+            </span>
+        </a></li>
+            </ul>
+        </div>
+    </div>
+</div>
+    
+        
+<div class="card widget">
+    <div class="card-content">
+        <h3 class="menu-label">
+            标签云
+        </h3>
+        <a href="/tags/Node-js/" style="font-size: 10px;">Node.js</a> <a href="/tags/hexo/" style="font-size: 20px;">hexo</a> <a href="/tags/linux运维/" style="font-size: 20px;">linux运维</a> <a href="/tags/代码规范/" style="font-size: 15px;">代码规范</a> <a href="/tags/网络编程/" style="font-size: 10px;">网络编程</a>
+    </div>
+</div>
+
+    
+    
+        <div class="column-right-shadow is-hidden-widescreen ">
+        
+            
+<div class="card widget">
+    <div class="card-content">
+        <h3 class="menu-label">
+            最新文章
+        </h3>
+        
+        <article class="media">
+            
+            <a href="/2019/08/07/基于-Net-Core的微型Http服务框架/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/thumbnail.svg" alt="基于.Net Core的微型Http服务框架">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-08-07T11:43:00.000Z">2019-08-07</time></div>
+                    <a href="/2019/08/07/基于-Net-Core的微型Http服务框架/" class="title has-link-black-ter is-size-6 has-text-weight-normal">基于.Net Core的微型Http服务框架</a>
+                    <p class="is-size-7 is-uppercase">
+                        
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2019/07/14/hexo-2/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/thumbnail.svg" alt="更换电脑或重装系统前后对原hexo博客的处理">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-07-14T03:25:00.000Z">2019-07-14</time></div>
+                    <a href="/2019/07/14/hexo-2/" class="title has-link-black-ter is-size-6 has-text-weight-normal">更换电脑或重装系统前后对原hexo博客的处理</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/hexo/">hexo</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2019/07/14/手把手教你用hexo搭建个人博客/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/thumbnail.svg" alt="手把手教你用hexo搭建个人博客">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-07-14T03:23:26.000Z">2019-07-14</time></div>
+                    <a href="/2019/07/14/手把手教你用hexo搭建个人博客/" class="title has-link-black-ter is-size-6 has-text-weight-normal">手把手教你用hexo搭建个人博客</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/hexo/">hexo</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2019/06/23/code/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/thumbnail.svg" alt="如何写出无法维护的代码">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-06-23T12:06:18.000Z">2019-06-23</time></div>
+                    <a href="/2019/06/23/code/" class="title has-link-black-ter is-size-6 has-text-weight-normal">如何写出无法维护的代码</a>
+                    <p class="is-size-7 is-uppercase">
+                        
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2019/06/22/如何用程序实现魔方的旋转/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/thumbnail.svg" alt="如何用程序实现魔方的旋转">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-06-22T05:23:24.000Z">2019-06-22</time></div>
+                    <a href="/2019/06/22/如何用程序实现魔方的旋转/" class="title has-link-black-ter is-size-6 has-text-weight-normal">如何用程序实现魔方的旋转</a>
+                    <p class="is-size-7 is-uppercase">
+                        
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+    </div>
+</div>
+
+        
+            <div class="card widget">
+    <div class="card-content">
+        <div class="menu">
+        <h3 class="menu-label">
+            归档
+        </h3>
+        <ul class="menu-list">
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/08/">
+                <span class="level-start">
+                    <span class="level-item">八月 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/07/">
+                <span class="level-start">
+                    <span class="level-item">七月 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/06/">
+                <span class="level-start">
+                    <span class="level-item">六月 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">5</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/05/">
+                <span class="level-start">
+                    <span class="level-item">五月 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">3</span>
+                </span>
+            </a>
+        </li>
+        
+        </ul>
+        </div>
+    </div>
+</div>
+        
+            <div class="card widget">
+    <div class="card-content">
+        <div class="menu">
+            <h3 class="menu-label">
+                标签
+            </h3>
+            <div class="field is-grouped is-grouped-multiline">
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Node-js/">
+                        <span class="tag">Node.js</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/hexo/">
+                        <span class="tag">hexo</span>
+                        <span class="tag is-grey">3</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/linux运维/">
+                        <span class="tag">linux运维</span>
+                        <span class="tag is-grey">3</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/代码规范/">
+                        <span class="tag">代码规范</span>
+                        <span class="tag is-grey">2</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/网络编程/">
+                        <span class="tag">网络编程</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+</div>
+        
+        </div>
+    
+</div>
+
+                
+
+
+
+
+<div class="column is-4-tablet is-4-desktop is-3-widescreen is-hidden-touch is-hidden-desktop-only has-order-3 column-right ">
+    
+        
+<div class="card widget">
+    <div class="card-content">
+        <h3 class="menu-label">
+            最新文章
+        </h3>
+        
+        <article class="media">
+            
+            <a href="/2019/08/07/基于-Net-Core的微型Http服务框架/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/thumbnail.svg" alt="基于.Net Core的微型Http服务框架">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-08-07T11:43:00.000Z">2019-08-07</time></div>
+                    <a href="/2019/08/07/基于-Net-Core的微型Http服务框架/" class="title has-link-black-ter is-size-6 has-text-weight-normal">基于.Net Core的微型Http服务框架</a>
+                    <p class="is-size-7 is-uppercase">
+                        
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2019/07/14/hexo-2/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/thumbnail.svg" alt="更换电脑或重装系统前后对原hexo博客的处理">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-07-14T03:25:00.000Z">2019-07-14</time></div>
+                    <a href="/2019/07/14/hexo-2/" class="title has-link-black-ter is-size-6 has-text-weight-normal">更换电脑或重装系统前后对原hexo博客的处理</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/hexo/">hexo</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2019/07/14/手把手教你用hexo搭建个人博客/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/thumbnail.svg" alt="手把手教你用hexo搭建个人博客">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-07-14T03:23:26.000Z">2019-07-14</time></div>
+                    <a href="/2019/07/14/手把手教你用hexo搭建个人博客/" class="title has-link-black-ter is-size-6 has-text-weight-normal">手把手教你用hexo搭建个人博客</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/hexo/">hexo</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2019/06/23/code/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/thumbnail.svg" alt="如何写出无法维护的代码">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-06-23T12:06:18.000Z">2019-06-23</time></div>
+                    <a href="/2019/06/23/code/" class="title has-link-black-ter is-size-6 has-text-weight-normal">如何写出无法维护的代码</a>
+                    <p class="is-size-7 is-uppercase">
+                        
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2019/06/22/如何用程序实现魔方的旋转/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/thumbnail.svg" alt="如何用程序实现魔方的旋转">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-06-22T05:23:24.000Z">2019-06-22</time></div>
+                    <a href="/2019/06/22/如何用程序实现魔方的旋转/" class="title has-link-black-ter is-size-6 has-text-weight-normal">如何用程序实现魔方的旋转</a>
+                    <p class="is-size-7 is-uppercase">
+                        
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+    </div>
+</div>
+
+    
+        <div class="card widget">
+    <div class="card-content">
+        <div class="menu">
+        <h3 class="menu-label">
+            归档
+        </h3>
+        <ul class="menu-list">
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/08/">
+                <span class="level-start">
+                    <span class="level-item">八月 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/07/">
+                <span class="level-start">
+                    <span class="level-item">七月 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/06/">
+                <span class="level-start">
+                    <span class="level-item">六月 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">5</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/05/">
+                <span class="level-start">
+                    <span class="level-item">五月 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">3</span>
+                </span>
+            </a>
+        </li>
+        
+        </ul>
+        </div>
+    </div>
+</div>
+    
+        <div class="card widget">
+    <div class="card-content">
+        <div class="menu">
+            <h3 class="menu-label">
+                标签
+            </h3>
+            <div class="field is-grouped is-grouped-multiline">
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Node-js/">
+                        <span class="tag">Node.js</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/hexo/">
+                        <span class="tag">hexo</span>
+                        <span class="tag is-grey">3</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/linux运维/">
+                        <span class="tag">linux运维</span>
+                        <span class="tag is-grey">3</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/代码规范/">
+                        <span class="tag">代码规范</span>
+                        <span class="tag is-grey">2</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/网络编程/">
+                        <span class="tag">网络编程</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+</div>
+    
+    
+</div>
+
+            </div>
+        </div>
+    </section>
+    <footer class="footer">
+    <div class="container">
+        <div class="level">
+            <div class="level-start has-text-centered-mobile">
+                <a class="footer-logo is-block has-mb-6" href="/">
+                
+                    <img src="/images/logo.svg" alt="基于.Net Core的微型Http服务框架" height="28">
+                
+                </a>
+                <p class="is-size-7">
+                &copy; 2019 电子科技协会&nbsp;
+                Powered by <a href="https://hexo.io/" target="_blank">Hexo</a> & <a
+                        href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank">Icarus</a>
+                
+                </p>
+            </div>
+            <div class="level-end">
+            
+                <div class="field has-addons is-flex-center-mobile has-mt-5-mobile is-flex-wrap is-flex-middle">
+                
+                
+                <p class="control">
+                    <a class="button is-white is-large" target="_blank" title="Creative Commons" href="https://creativecommons.org/">
+                        
+                        <i class="fab fa-creative-commons"></i>
+                        
+                    </a>
+                </p>
+                
+                <p class="control">
+                    <a class="button is-white is-large" target="_blank" title="Attribution 4.0 International" href="https://creativecommons.org/licenses/by/4.0/">
+                        
+                        <i class="fab fa-creative-commons-by"></i>
+                        
+                    </a>
+                </p>
+                
+                <p class="control">
+                    <a class="button is-white is-large" target="_blank" title="Download on GitHub" href="https://github.com/ppoffice/hexo-theme-icarus">
+                        
+                        <i class="fab fa-github"></i>
+                        
+                    </a>
+                </p>
+                
+                </div>
+            
+            </div>
+        </div>
+    </div>
+</footer>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script>
+<script>moment.locale("zh-CN");</script>
+
+<script>
+var IcarusThemeSettings = {
+    article: {
+        highlight: {
+            clipboard: true,
+            fold: 'unfolded'
+        }
+    }
+};
+</script>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script>
+
+
+
+    
+    
+    
+    <script src="/js/animation.js"></script>
+    
+
+    
+    
+    
+    <script src="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/js/lightgallery.min.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js" defer></script>
+    <script src="/js/gallery.js" defer></script>
+    
+
+    
+    
+
+<div id="outdated">
+    <h6>Your browser is out-of-date!</h6>
+    <p>Update your browser to view this website correctly. <a id="btnUpdateBrowser" href="http://outdatedbrowser.com/">Update
+            my browser now </a></p>
+    <p class="last"><a href="#" id="btnCloseUpdateBrowser" title="Close">&times;</a></p>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.js" defer></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        outdatedBrowser({
+            bgColor: '#f25648',
+            color: '#ffffff',
+            lowerThan: 'flex'
+        });
+    });
+</script>
+
+
+    
+    
+<script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.5/unpacked/MathJax.js?config=TeX-MML-AM_CHTML" defer></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    MathJax.Hub.Config({
+        'HTML-CSS': {
+            matchFontHeight: false
+        },
+        SVG: {
+            matchFontHeight: false
+        },
+        CommonHTML: {
+            matchFontHeight: false
+        },
+        tex2jax: {
+            inlineMath: [
+                ['$','$'],
+                ['\\(','\\)']
+            ]
+        }
+    });
+});
+</script>
+
+    
+    
+
+<a id="back-to-top" title="回到顶端" href="javascript:;">
+    <i class="fas fa-chevron-up"></i>
+</a>
+<script src="/js/back-to-top.js" defer></script>
+
+
+    
+    
+
+    
+    
+    
+    
+
+    
+    
+    
+    
+    
+
+
+<script src="/js/main.js" defer></script>
+
+    
+    <div class="searchbox ins-search">
+    <div class="searchbox-container ins-search-container">
+        <div class="searchbox-input-wrapper">
+            <input type="text" class="searchbox-input ins-search-input" placeholder="想要查找什么..." />
+            <span class="searchbox-close ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="searchbox-result-wrapper ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+    (function (window) {
+        var INSIGHT_CONFIG = {
+            TRANSLATION: {
+                POSTS: '文章',
+                PAGES: '页面',
+                CATEGORIES: '分类',
+                TAGS: '标签',
+                UNTITLED: '(无标题)',
+            },
+            CONTENT_URL: '/content.json',
+        };
+        window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+    })(window);
+</script>
+<script src="/js/insight.js" defer></script>
+<link rel="stylesheet" href="/css/search.css">
+<link rel="stylesheet" href="/css/insight.css">
+    
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({ tex2jax: { inlineMath: [ ["$","$"], ["\\(","\\)"] ], skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'], processEscapes: true } }); MathJax.Hub.Queue(function() { var all = MathJax.Hub.getAllJax(); for (var i = 0;
+    i
+    < all.length; ++i) all[i].SourceElement().parentNode.className +=' has-jax' ; }); </script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+</body>
+</html>
